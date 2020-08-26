@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To-do List</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="img/Logo_white_favicon.png" />
+  </head>
+  <body>
+    <header>
+      <img id="logo" src="./img/Logo_blue.png" alt="logo" />
+      <h1 id="title">To-do list</h1>
+    </header>
+    <main>
+      <div id="add-new-task">
+        <input
+          type="text"
+          id="add-new-task__input"
+          placeholder="Pick up seeds for Hedwig"
+        />
+        <button id="add-new-task__button">+</button>
+      </div>
+      <div id="tasks">
+        <div id="tasks__header">
+          <h2 id="tasks__header__title">Tasks</h2>
+          <button id="tasks__header__button">Clear completed tasks</button>
+        </div>
+        <ul id="tasks__list"></ul>
+      </div>
+    </main>
+    <template id="task-template">
+      <li class="task-template__item">
+        <input type="checkbox" />
+        <label>
+          <svg class="task-template__item__svg" width="25" height="19">
+            <path
+              class="task-template__item__custom-checkmark"
+              d="M10,30 l30,50 l95,-70"
+            />
+          </svg>
+          <span class="task-template__item__custom-checkbox"></span>
+          <p class="task-template__item__text"></p>
+        </label>
+      </li>
+    </template>
+    <script src="main.js"></script>
+    <script src="accessibility.js"></script>
+  </body>
+</html>
