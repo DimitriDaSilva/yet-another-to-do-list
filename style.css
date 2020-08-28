@@ -1,187 +1,206 @@
-import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@0,300;0,400;0,500;0,700;1,400&display=swap");
-import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@0,300;0,400;0,500;0,700;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap");
 
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 
 body {
-    margin: 0;
-    font-family: 'Ubuntu', sans-serif;
+  margin: 0;
+  font-family: "Ubuntu", sans-serif;
 }
 
 header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 #logo {
-    width: 3rem
+  width: 2.5rem;
 }
 
 #title {
-    font-size: 4rem;
-    margin-left: 0.4rem;
-    color: #444444
+  font-size: 3rem;
+  margin-left: 0.4rem;
+  color: #444444;
 }
 
 #add-new-task {
-    width: 70vw;
-    display: flex;
-    justify-content: center;
-    background: rgb(235, 235, 235);
-    padding: 2rem;
-    border-radius: 4px;
+  width: 90vw;
+  display: flex;
+  justify-content: center;
+  background: #ebebeb;
+  border-radius: 4px;
 }
 
 #add-new-task__input {
-    margin-right: 1rem;
-    border: none;
-    border-radius: 4px;
-    width: 40vw;
-    padding: 0.4rem;
+  margin: 2rem 1rem 2rem 2rem;
+  border: none;
+  border-radius: 4px;
+  width: 60vw;
+  padding: 0.4rem;
 }
 
 #add-new-task__button {
-    border: .5px #111455 solid;
-    border-radius: 50%;
-    width: 1.8rem;
-    height: 1.8rem;
-    padding: 0;
-    color: #444444;
-    font-size: 1.5rem;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 100;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-    display: block;
-    line-height: 1px;    
-}   
+  border: 0.5px #111455 solid;
+  border-radius: 50%;
+  width: 1.8rem;
+  height: 1.8rem;
+  padding: 0;
+  color: #444444;
+  background: #ebebeb;
+  font-size: 1.5rem;
+  font-family: "Roboto", sans-serif;
+  font-weight: 100;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  display: block;
+  line-height: 1px;
+  margin: 2rem 2rem 2rem 0rem;
+}
 
 #add-new-task__button:hover {
-    background: #111455;
-    color: white;
+  background: #111455;
+  color: white;
+}
+
+#tasks {
+  width: 90%;
 }
 
 #tasks__header {
-    width: 85vw;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 #tasks__header__title {
-    text-align: center;
-    color: #444444;
-    width: 100%;
-    border-bottom: 1px #c4c4c4 solid;
-    margin-bottom: 0.1rem;
+  text-align: center;
+  color: #444444;
+  width: 100%;
+  border-bottom: 1px #a8a8a8 solid;
+  margin-bottom: 0.1rem;
 }
 
 #tasks__header__button {
-    border: none;
-    background: none;
-    font-style: italic;
-    color: #c4c4c4;
-    margin-top: 0.1rem;
-    cursor: pointer;
+  border: none;
+  background: none;
+  font-style: italic;
+  color: #a8a8a8;
+  margin-top: 0.1rem;
+  cursor: pointer;
 }
 
 #tasks__header__button:hover {
-    color: #111455;
+  color: #111455;
 }
 
 #tasks__header__button::before {
-    content: "";
-    background-image:url(./img/broomstick.svg);
-    background-size: 100% 100%;
-    display: inline-block;
-    height: 15px;
-    width:15px;
-    position:relative;
-    right: 5px;
-    top: 2px;
-    filter: invert(90%) sepia(1%) saturate(0%) hue-rotate(338deg) brightness(89%) contrast(89%);
+  content: "";
+  background-image: url(./img/broomstick.svg);
+  background-size: 100% 100%;
+  display: inline-block;
+  height: 15px;
+  width: 15px;
+  position: relative;
+  right: 5px;
+  top: 2px;
+  filter: invert(65%) sepia(56%) saturate(0%) hue-rotate(223deg) brightness(91%)
+    contrast(98%);
 }
 
 #tasks__header__button:hover::before {
-    filter: invert(3%) sepia(94%) saturate(7349%) hue-rotate(246deg) brightness(102%) contrast(95%);
+  filter: invert(3%) sepia(94%) saturate(7349%) hue-rotate(246deg)
+    brightness(102%) contrast(95%);
+}
+
+@media (hover: none) {
+  #tasks__header__button::before {
+    filter: invert(65%) sepia(56%) saturate(0%) hue-rotate(223deg)
+      brightness(91%) contrast(98%);
+  }
+
+  #tasks__header__button {
+    color: #a8a8a8;
+  }
+
+  #add-new-task__button {
+    color: #444444;
+    background: #ebebeb;
+  }
 }
 
 ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 10px 0;
+  list-style-type: none;
+  margin: 0;
+  padding: 10px 0;
 }
 
 ul label {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 #tasks__list input {
-    position: absolute;
-    opacity: 0;
+  position: absolute;
+  opacity: 0;
 }
 
 .task-template__item {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .task-template__item__custom-checkbox {
-    display: inline-block;
-    width: 1.4rem;
-    height: 1.4rem;
-    border-radius: 3px;
-    position: relative;
-    left: 0.1rem;
-    background: #111455;
+  display: inline-block;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 3px;
+  position: relative;
+  left: 0.1rem;
+  background: #111455;
 }
 
 .task-template__item__svg {
-    z-index: 2;
-    position: absolute;
+  z-index: 2;
+  position: absolute;
 }
 
 [type="checkbox"]:checked + label .task-template__item__custom-checkmark {
-    fill: none;
-    transform: scale(0.2);
-    stroke: white;
-    stroke-width: 20;
-    stroke-dasharray: 180;
-    stroke-dashoffset: 180;
-    -webkit-animation: draw .4s forwards ease-in-out;
-    animation: draw .4s forwards ease-in-out;
+  fill: none;
+  transform: scale(0.2);
+  stroke: white;
+  stroke-width: 20;
+  stroke-dasharray: 180;
+  stroke-dashoffset: 180;
+  -webkit-animation: draw 0.4s forwards ease-in-out;
+  animation: draw 0.4s forwards ease-in-out;
+}
+
+@-webkit-keyframes draw {
+  to {
+    stroke-dashoffset: 0;
   }
+}
 
-  -webkit-@keyframes draw {
-    to {
-      stroke-dashoffset: 0;
-    }
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
   }
-  @keyframes draw {
-    to {
-      stroke-dashoffset: 0;
-    }
-  }
+}
 
-  .task-template__item__text {
-      margin-left: 1rem;
-  }
-
-
-
-
-
-
-
+.task-template__item__text {
+  margin-left: 1rem;
+}
