@@ -28,12 +28,14 @@ function addTask(taskString, taskCheck = false) {
   const taskElement = document.importNode(taskTemplate.content, true);
   const checkbox = taskElement.querySelector("input");
   const label = taskElement.querySelector("label");
+  const cross = taskElement.querySelectorAll(".task-template__item__cross");
 
+  cross[0].id = id;
   checkbox.id = id;
   checkbox.checked = taskCheck;
   label.htmlFor = id;
 
-  const textPlace = label.querySelector("p");
+  const textPlace = taskElement.querySelector("p");
   textPlace.append(taskString);
   taskList.appendChild(taskElement);
 
@@ -67,8 +69,7 @@ window.addEventListener("beforeunload", () => {
     let checkedItem = input.checked;
 
     // Get task text
-    let label = liElements[i].querySelector("label");
-    let text = label.lastElementChild;
+    let text = liElements[i].querySelector("p");
     let taskItem = text.outerText;
 
     let allItems = {
@@ -82,10 +83,30 @@ window.addEventListener("beforeunload", () => {
   localStorage.setItem("tasks", JSON.stringify(tasksArray));
 });
 
+// Onload, download the info from the localStorage
 window.addEventListener("load", () => {
   const data = JSON.parse(localStorage.getItem("tasks"));
-  console.log(data);
   data.forEach((item) => {
     addTask(item.task, item.checked);
   });
+});
+
+// Set a loop listening to all crosses
+document.addEventListener("mousedown", () => {
+  let crossDeleteBtns = document.getElementsByClassName(
+    "task-template__item__cross"
+  );
+  for (let i = 0; i < crossDeleteBtns.length; i++) {
+    let cross = crossDeleteBtns[i];
+    cross.addEventListener("click", () => {
+      let crossId = cross.id;
+      const tasks = document.querySelectorAll(".task-template__item");
+      tasks.forEach((task) => {
+        const inputId = task.querySelector("input").id;
+        if (inputId == crossId) {
+          task.remove();
+        }
+      });
+    });
+  }
 });

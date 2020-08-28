@@ -208,3 +208,10 @@ ul label {
   color: #444444;
   flex: 1;
 }
+
+.task-template__item__cross {
+  position: absolute;
+  right: 5%;
+  cursor: pointer;
+  color: #a8a8a8;
+}
