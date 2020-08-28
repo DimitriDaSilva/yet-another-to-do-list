@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@0,300;0,400;0,500;0,700;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap");
 
 *,
@@ -27,7 +27,7 @@ main {
 }
 
 #logo {
-  width: 2.5rem;
+  width: 2.1rem;
 }
 
 #title {
@@ -48,8 +48,10 @@ main {
   margin: 2rem 1rem 2rem 2rem;
   border: none;
   border-radius: 4px;
-  width: 60vw;
+  width: 55vw;
   padding: 0.4rem;
+  color: #444444;
+  font-family: "Ubuntu", sans-serif;
 }
 
 #add-new-task__button {
@@ -126,7 +128,7 @@ main {
     brightness(102%) contrast(95%);
 }
 
-@media (hover: none) {
+@media (hover: none) and (pointer: coarse) {
   #tasks__header__button::before {
     filter: invert(65%) sepia(56%) saturate(0%) hue-rotate(223deg)
       brightness(91%) contrast(98%);
@@ -203,4 +205,5 @@ ul label {
 
 .task-template__item__text {
   margin-left: 1rem;
+  color: #444444;
 }
