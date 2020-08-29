@@ -110,3 +110,22 @@ document.addEventListener("mousedown", () => {
     });
   }
 });
+
+// Make the tasks editable on click
+document.addEventListener("mousedown", () => {
+  let tasksText = document.getElementsByClassName("task-template__item__text");
+  for (let i = 0; i < tasksText.length; i++) {
+    let text = tasksText[i];
+    text.addEventListener("click", () => {
+      text.contentEditable = "true";
+      // let crossId = cross.id;
+      // const tasks = document.querySelectorAll(".task-template__item");
+      // tasks.forEach((task) => {
+      //   const inputId = task.querySelector("input").id;
+      //   if (inputId == crossId) {
+      //     task.remove();
+      //   }
+      // });
+    });
+  }
+});
