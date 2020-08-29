@@ -30,8 +30,14 @@
       </div>
     </main>
     <template id="task-template">
-      <li class="task-template__item">
-        <img class="task-template__item__drag" src="./img/drag-symbol.svg" alt="drag-symbol">
+      <li class="task-template__item" draggable="true">
+        <div class="task-template__item__drag">
+          <img
+            src="./img/drag-symbol.svg"
+            alt="drag-symbol"
+            draggable="false"
+          />
+        </div>
         <input type="checkbox" />
         <label>
           <svg class="task-template__item__svg" width="25" height="19">
@@ -41,9 +47,9 @@
             />
           </svg>
         </label>
-          <span class="task-template__item__custom-checkbox"></span>
-          <p class="task-template__item__text" contenteditable="true"></p>
-          <span class="task-template__item__cross">&#10005</span>
+        <span class="task-template__item__custom-checkbox"></span>
+        <p class="task-template__item__text" contenteditable="true"></p>
+        <span class="task-template__item__cross">&#10005;</span>
       </li>
     </template>
     <script src="./js/main.js"></script>

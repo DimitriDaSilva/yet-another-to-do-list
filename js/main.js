@@ -101,8 +101,29 @@ window.addEventListener("load", () => {
   });
 });
 
+// Set a mutation observer so that the eventListeners are up to date with the current crosses and the drag-and-drop symbols
+
+// We are only observing if a task (i.e. a li element) gets added or deleted
+const config = { attributes: true, childList: true };
+
+// Callback function to execute when mutation are observed
+const callback = function (mutationsList, observer) {
+  for (let mutation of mutationsList) {
+    if (mutation.type === "childList") {
+      setListenersCrosses();
+      // makeElementsDraggable();
+    }
+  }
+};
+
+// Create the observer instance linked to the callback function
+const observer = new MutationObserver(callback);
+
+// Start checking for DOM tree mutations
+observer.observe(taskList, config);
+
 // Set a loop listening to all crosses
-document.addEventListener("mousedown", () => {
+function setListenersCrosses() {
   let crossDeleteBtns = document.getElementsByClassName(
     "task-template__item__cross"
   );
@@ -119,4 +140,56 @@ document.addEventListener("mousedown", () => {
       });
     });
   }
-});
+}
+
+document.addEventListener("mousedown", makeElementsDraggable);
+
+// Make elements draggable
+function makeElementsDraggable() {
+  const tasks = document.querySelectorAll(".task-template__item");
+  // taskList
+
+  tasks.forEach((task) => {
+    task.addEventListener("dragstart", () => {
+      task.classList.add("task-template__item--dragging");
+    });
+
+    task.addEventListener("dragend", () => {
+      task.classList.remove("task-template__item--dragging");
+    });
+  });
+
+  taskList.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    const afterElement = getDragAfterElement(taskList, e.clientY);
+    const task = document.querySelector(".task-template__item--dragging");
+    if (afterElement == null) {
+      taskList.appendChild(task);
+    } else {
+      taskList.insertBefore(task, afterElement);
+    }
+  });
+}
+
+function getDragAfterElement(container, y) {
+  const draggableElements = [
+    ...container.querySelectorAll(
+      ".task-template__item:not(.task-template__item--dragging)"
+    ),
+  ];
+
+  return draggableElements.reduce(
+    (closest, child) => {
+      const box = child.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
+      if (offset < 0 && offset > closest.offset) {
+        return { offset: offset, element: child };
+      } else {
+        return closest;
+      }
+    },
+    {
+      offset: Number.NEGATIVE_INFINITY,
+    }
+  ).element;
+}
