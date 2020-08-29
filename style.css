@@ -150,9 +150,18 @@ ul {
   padding: 10px 0;
 }
 
+.task-template__item {
+  display: flex;
+  align-items: center;
+}
+
 ul label {
   display: flex;
   align-items: center;
+}
+
+ul label svg {
+  cursor: pointer;
 }
 
 #tasks__list input {
@@ -160,9 +169,14 @@ ul label {
   opacity: 0;
 }
 
-.task-template__item {
-  display: flex;
-  align-items: center;
+.task-template__item__drag {
+  opacity: 0;
+  cursor: move;
+  margin-right: 0.2rem;
+}
+
+.task-template__item:hover .task-template__item__drag {
+  opacity: 1;
 }
 
 .task-template__item__custom-checkbox {
@@ -211,7 +225,7 @@ ul label {
 
 .task-template__item__cross {
   position: absolute;
-  right: 5%;
+  right: 7%;
   cursor: pointer;
   color: #a8a8a8;
 }

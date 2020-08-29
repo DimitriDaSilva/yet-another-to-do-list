@@ -32,7 +32,17 @@ function addTask(taskString, taskCheck = false) {
 
   cross[0].id = id;
   checkbox.id = id;
-  checkbox.checked = taskCheck;
+
+  // Making sure that the check animation doesn't restart onload page
+  if (taskCheck) {
+    const checkCustom = label.querySelector("svg");
+    const path = checkCustom.querySelector("path");
+    path.style.strokeDashoffset = 0;
+    checkbox.checked = taskCheck;
+  } else {
+    checkbox.checked = taskCheck;
+  }
+
   label.htmlFor = id;
 
   const textPlace = taskElement.querySelector("p");
