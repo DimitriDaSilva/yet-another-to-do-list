@@ -111,7 +111,7 @@ const callback = function (mutationsList, observer) {
   for (let mutation of mutationsList) {
     if (mutation.type === "childList") {
       setListenersCrosses();
-      // makeElementsDraggable();
+      makeElementsDraggable();
     }
   }
 };
@@ -142,34 +142,30 @@ function setListenersCrosses() {
   }
 }
 
-document.addEventListener("mousedown", makeElementsDraggable);
-
 // Make elements draggable
 function makeElementsDraggable() {
   const tasks = document.querySelectorAll(".task-template__item");
-  // taskList
 
   tasks.forEach((task) => {
-    task.addEventListener("dragstart", () => {
+    const dragLogo = task.querySelector(".task-template__item__drag");
+    task.addEventListener("dragstart", function (e) {
       task.classList.add("task-template__item--dragging");
+      dragLogo.classList.add("task-template__item--ongoing-drag");
     });
 
     task.addEventListener("dragend", () => {
       task.classList.remove("task-template__item--dragging");
+      dragLogo.classList.remove("task-template__item--ongoing-drag");
     });
   });
-
-  taskList.addEventListener("dragover", (e) => {
-    e.preventDefault();
-    const afterElement = getDragAfterElement(taskList, e.clientY);
-    const task = document.querySelector(".task-template__item--dragging");
-    if (afterElement == null) {
-      taskList.appendChild(task);
-    } else {
-      taskList.insertBefore(task, afterElement);
-    }
-  });
 }
+
+taskList.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  const afterElement = getDragAfterElement(taskList, e.clientY);
+  const task = document.querySelector(".task-template__item--dragging");
+  taskList.insertBefore(task, afterElement);
+});
 
 function getDragAfterElement(container, y) {
   const draggableElements = [
