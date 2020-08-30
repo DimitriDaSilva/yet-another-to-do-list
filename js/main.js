@@ -147,19 +147,44 @@ function makeElementsDraggable() {
   const tasks = document.querySelectorAll(".task-template__item");
 
   tasks.forEach((task) => {
+    // dragLogo is the 6-dots logo representing the UI elements for drag-and-drop
+    // Its default behaviour was not logical, so I fixed it
+    // It's being called in both startDragStyle and endDragStyle so I'm setting it before so that it doesn't run twice
     const dragLogo = task.querySelector(".task-template__item__drag");
-    task.addEventListener("dragstart", function (e) {
+
+    // Set the style of the task while it's being dragged
+    // touchmove for touch-based device and dragstart for mouse-based ones
+    task.addEventListener("touchmove", startDragStyle);
+    task.addEventListener("dragstart", startDragStyle);
+
+    function startDragStyle() {
       task.classList.add("task-template__item--dragging");
       dragLogo.classList.add("task-template__item--ongoing-drag");
-    });
+    }
 
-    task.addEventListener("dragend", () => {
+    // Revert back to original style once task dropped
+    // touchend for touch-based devices and dragend for mouse-based ones
+    task.addEventListener("touchend", endDragStyle);
+    task.addEventListener("dragend", endDragStyle);
+
+    function endDragStyle() {
       task.classList.remove("task-template__item--dragging");
       dragLogo.classList.remove("task-template__item--ongoing-drag");
-    });
+    }
   });
 }
 
+// Checking the position of the task based on its position on the y axis
+// touchmove for touch-based devices
+taskList.addEventListener("touchmove", (e) => {
+  e.preventDefault();
+  const touchY = e.touches[0].clientY;
+  const afterElement = getDragAfterElement(taskList, touchY);
+  const task = document.querySelector(".task-template__item--dragging");
+  taskList.insertBefore(task, afterElement);
+});
+
+// dragover for mouse-based devices
 taskList.addEventListener("dragover", (e) => {
   e.preventDefault();
   const afterElement = getDragAfterElement(taskList, e.clientY);
@@ -167,6 +192,8 @@ taskList.addEventListener("dragover", (e) => {
   taskList.insertBefore(task, afterElement);
 });
 
+// Function that actually returns the tasks over which the user hovers with the dragged element
+// Credit to Web Dev Simplified's YouTube channel for this sweet piece of code
 function getDragAfterElement(container, y) {
   const draggableElements = [
     ...container.querySelectorAll(
