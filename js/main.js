@@ -154,22 +154,24 @@ function makeElementsDraggable() {
 
     // Set the style of the task while it's being dragged
     // touchmove for touch-based device and dragstart for mouse-based ones
-    task.addEventListener("touchmove", startDragStyle);
-    task.addEventListener("dragstart", startDragStyle);
+    task.addEventListener("touchmove", startDrag);
+    task.addEventListener("dragstart", startDrag);
 
-    function startDragStyle() {
+    function startDrag() {
       task.classList.add("task-template__item--dragging");
       dragLogo.classList.add("task-template__item--ongoing-drag");
+      document.body.classList.add("stop-scrolling");
     }
 
     // Revert back to original style once task dropped
     // touchend for touch-based devices and dragend for mouse-based ones
-    task.addEventListener("touchend", endDragStyle);
-    task.addEventListener("dragend", endDragStyle);
+    task.addEventListener("touchend", endDrag);
+    task.addEventListener("dragend", endDrag);
 
-    function endDragStyle() {
+    function endDrag() {
       task.classList.remove("task-template__item--dragging");
       dragLogo.classList.remove("task-template__item--ongoing-drag");
+      document.body.classList.remove("stop-scrolling");
     }
   });
 }
