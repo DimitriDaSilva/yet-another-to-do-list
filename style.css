@@ -158,11 +158,6 @@ ul {
   padding: 10px 0;
 }
 
-.stop-scrolling {
-  height: 100%;
-  overflow: hidden;
-}
-
 .task-template__item {
   display: flex;
   align-items: center;

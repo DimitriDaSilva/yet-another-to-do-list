@@ -152,27 +152,61 @@ function makeElementsDraggable() {
     // It's being called in both startDragStyle and endDragStyle so I'm setting it before so that it doesn't run twice
     const dragLogo = task.querySelector(".task-template__item__drag");
 
+    // Extract the value of draggable of the task
+    // Which is initially false but becomes temporarely true onclick
+    let draggable = task.draggable;
+
+    // Set the style of the task while it's being dragged
+    // Handle the behaviour for touch-based devices
+    let touchTimeout;
+
+    // task.addEventListener("touchmove", (e) => {
+    //   if (!draggable) {
+    //     e.stopPropagation();
+    //     clearTimeout(touchTimeout);
+    //   }
+    // });
+
+    task.addEventListener("touchstart", () => {
+      touchTimeout = setTimeout(() => {
+        task.draggable = true;
+        task.classList.add("task-template__item--dragging");
+        dragLogo.classList.add("task-template__item--ongoing-drag");
+      }, 200);
+    });
+
+    task.addEventListener("touchend", () => {
+      clearTimeout(touchTimeout);
+      task.draggable = false;
+      task.classList.remove("task-template__item--dragging");
+      dragLogo.classList.remove("task-template__item--ongoing-drag");
+    });
+
     // Set the style of the task while it's being dragged
     // touchmove for touch-based device and dragstart for mouse-based ones
-    task.addEventListener("touchmove", startDrag);
-    task.addEventListener("dragstart", startDrag);
 
-    function startDrag() {
-      task.classList.add("task-template__item--dragging");
-      dragLogo.classList.add("task-template__item--ongoing-drag");
-      document.body.classList.add("stop-scrolling");
-    }
+    // task.addEventListener("touchmove", startDrag);
 
     // Revert back to original style once task dropped
     // touchend for touch-based devices and dragend for mouse-based ones
-    task.addEventListener("touchend", endDrag);
-    task.addEventListener("dragend", endDrag);
+    // task.addEventListener("touchend", endDrag);
 
-    function endDrag() {
+    // Set the style of the task while it's being dragged
+    // Handle the behaviour for mouse-based devices
+    task.addEventListener("mousedown", () => {
+      task.draggable = true;
+    });
+
+    task.addEventListener("dragstart", () => {
+      task.classList.add("task-template__item--dragging");
+      dragLogo.classList.add("task-template__item--ongoing-drag");
+    });
+
+    task.addEventListener("dragend", () => {
       task.classList.remove("task-template__item--dragging");
       dragLogo.classList.remove("task-template__item--ongoing-drag");
-      document.body.classList.remove("stop-scrolling");
-    }
+      task.draggable = false;
+    });
   });
 }
 
