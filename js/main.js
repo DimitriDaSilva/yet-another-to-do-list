@@ -99,6 +99,13 @@ window.addEventListener("load", () => {
   data.forEach((item) => {
     addTask(item.task, item.checked);
   });
+
+  //
+  if (localStorage.length == 1 && data.length == 0) {
+    addTask("Crush my goals of the month", true);
+    addTask("Go find Voldemort's nose");
+    addTask("Date my best friend's little sister");
+  }
 });
 
 // Set a mutation observer so that the eventListeners are up to date with the current crosses and the drag-and-drop symbols
@@ -159,13 +166,6 @@ function makeElementsDraggable() {
     // Set the style of the task while it's being dragged
     // Handle the behaviour for touch-based devices
     let touchTimeout;
-
-    // task.addEventListener("touchmove", (e) => {
-    //   if (!draggable) {
-    //     e.stopPropagation();
-    //     clearTimeout(touchTimeout);
-    //   }
-    // });
 
     task.addEventListener("touchstart", () => {
       touchTimeout = setTimeout(() => {
@@ -252,3 +252,8 @@ function getDragAfterElement(container, y) {
     }
   ).element;
 }
+
+// Set an autosave every 5 minutes just in case the browser crashes
+setTimeout(() => {
+  location = location;
+}, 300000);
