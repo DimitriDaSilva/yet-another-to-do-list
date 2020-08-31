@@ -19,6 +19,11 @@ newTask.addEventListener("keyup", (e) => {
 addTaskBtn.addEventListener("click", () => {
   if (newTask.value != "") {
     addTask(newTask.value);
+
+    const inputDatalist = document.getElementById(
+      "add-new-task__category__input"
+    );
+    console.log(inputDatalist.value);
   }
 });
 
@@ -257,3 +262,5 @@ function getDragAfterElement(container, y) {
 setTimeout(() => {
   location = location;
 }, 300000);
+
+// Make categories and urgency

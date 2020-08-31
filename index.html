@@ -20,6 +20,43 @@
           placeholder="Pick up seeds for Hedwig"
         />
         <button id="add-new-task__button">+</button>
+        <div id="add-new-task__category" class="add-new-task__category-urgency">
+          <label for="add-new-task__category__input">Category</label>
+          <input
+            id="add-new-task__category__input"
+            type="text"
+            placeholder="Type your own category"
+            name="add-new-task__category__input"
+            list="add-new-task__category__list"
+            class="add-new-task__category-urgency__input"
+          />
+          <datalist
+            id="add-new-task__category__list"
+            class="add-new-task__category-urgency__list"
+          >
+            <option value="Inbox"></option>
+          </datalist>
+        </div>
+        <div id="add-new-task__urgency" class="add-new-task__category-urgency">
+          <label for="add-new-task__urgency__input">Urgency&nbsp;&nbsp;</label>
+          <input
+            id="add-new-task__urgency__input"
+            type="text"
+            placeholder="From High to None"
+            name="add-new-task__urgency__input"
+            list="add-new-task__urgency__list"
+            class="add-new-task__category-urgency__input"
+          />
+          <datalist
+            id="add-new-task__urgency__list"
+            class="add-new-task__category-urgency__list"
+          >
+            <option value="High"></option>
+            <option value="Medium"></option>
+            <option value="Low"></option>
+            <option value="None"></option>
+          </datalist>
+        </div>
       </div>
       <div id="tasks">
         <div id="tasks__header">
