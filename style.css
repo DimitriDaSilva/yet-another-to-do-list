@@ -23,25 +23,41 @@ body {
 }
 
 header {
+  background: url(./img/wallpapers/blue-mountains.jpg);
+  background-position: center center;
+  background-size: cover;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-evenly;
   align-items: center;
+  padding: 0.7rem;
+}
+
+#top-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 0.7rem;
+}
+
+#top-section__icons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#top-section__reload,
+#top-section__dark-mode img {
+  width: 1.2rem;
+  cursor: pointer;
+  margin-left: 0.8rem;
 }
 
 main {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-#logo {
-  width: 2.1rem;
-}
-
-#title {
-  font-size: 3rem;
-  margin-left: 0.4rem;
-  color: var(--dark-color);
 }
 
 #add-new-task {
@@ -57,6 +73,8 @@ main {
     "input input input button"
     "category category category button"
     "urgency urgency urgency button";
+  margin-bottom: 0.7rem;
+  opacity: 0.95;
 }
 
 #add-new-task__input {
@@ -137,26 +155,20 @@ main {
   font-family: "Ubuntu", sans-serif;
 }
 
-#tasks {
-  width: 90%;
-}
-
-#tasks__header {
+#buttons {
   width: 100%;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  padding: 0.7rem;
 }
 
-#tasks__header__title {
-  text-align: center;
-  color: var(--dark-color);
-  width: 100%;
-  border-bottom: 1px var(--light-ish-color) solid;
-  margin-bottom: 0.1rem;
+#buttons__filter {
+  margin-left: 5px;
 }
 
-#tasks__header__button {
+#buttons__clear,
+#buttons__filter {
   border: none;
   background: none;
   font-style: italic;
@@ -166,14 +178,17 @@ main {
 }
 
 @media (hover: hover) {
-  #tasks__header__button:hover {
+  #buttons__clear:hover {
+    color: var(--darkest-color);
+  }
+  #buttons__filter:hover {
     color: var(--darkest-color);
   }
 }
 
-#tasks__header__button::before {
+#buttons__clear::before {
   content: "";
-  background-image: url(./img/broomstick.svg);
+  background-image: url(./img/clear.svg);
   background-size: 100% 100%;
   display: inline-block;
   height: 15px;
@@ -186,16 +201,67 @@ main {
 }
 
 @media (hover: hover) {
-  #tasks__header__button:hover::before {
+  #buttons__clear:hover::before,
+  #buttons__filter:hover::before {
     filter: invert(3%) sepia(94%) saturate(7349%) hue-rotate(246deg)
       brightness(102%) contrast(95%);
   }
 }
 
+#buttons__filter::before {
+  content: "";
+  background-image: url(./img/filter.svg);
+  background-size: 100% 100%;
+  display: inline-block;
+  height: 15px;
+  width: 15px;
+  position: relative;
+  right: 5px;
+  top: 2px;
+  filter: invert(65%) sepia(56%) saturate(0%) hue-rotate(223deg) brightness(91%)
+    contrast(98%);
+}
+
+#tasks {
+  width: 90%;
+}
+
+.tasks__task {
+  margin-top: 1rem;
+}
+
+.tasks__task__title {
+  font-size: larger;
+  font-weight: 500;
+  color: var(--dark-color);
+  width: 100%;
+  border-bottom: 1px var(--light-ish-color) solid;
+  padding-bottom: 0.4rem;
+}
+
+.tasks__task[open] #tasks__list {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+summary::-webkit-details-marker {
+  color: var(--darkest-color);
+}
+
 ul {
   list-style-type: none;
   margin: 0;
-  padding: 10px 0;
+  padding: 5px 0;
 }
 
 .task-template__item {
@@ -206,7 +272,6 @@ ul {
 .task-template__item--dragging {
   opacity: 0.4;
   box-shadow: inset 0 0 0 0.5px var(--light-ish-color);
-  /* border: 0.5px var(--light-ish-color) solid; */
   border-radius: 4px;
 }
 
@@ -284,14 +349,14 @@ ul label svg {
 }
 
 .task-template__item__text {
-  margin-left: 1rem;
+  margin: 0.7rem 0 0.7rem 1rem;
   color: var(--dark-color);
   flex: 1;
 }
 
 .task-template__item__cross {
-  position: absolute;
-  right: 7%;
+  float: right;
+  margin-right: 10px;
   cursor: pointer;
   color: var(--light-ish-color);
 }

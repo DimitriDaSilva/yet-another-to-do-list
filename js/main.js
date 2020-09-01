@@ -1,7 +1,7 @@
 // Set listeners
 const newTask = document.querySelector("#add-new-task__input");
 const addTaskBtn = document.querySelector("#add-new-task__button");
-const clearCompletedBtn = document.querySelector("#tasks__header__button");
+const clearCompletedBtn = document.querySelector("#buttons__clear");
 const taskList = document.querySelector("#tasks__list");
 const taskTemplate = document.querySelector("#task-template");
 
@@ -19,11 +19,6 @@ newTask.addEventListener("keyup", (e) => {
 addTaskBtn.addEventListener("click", () => {
   if (newTask.value != "") {
     addTask(newTask.value);
-
-    const inputDatalist = document.getElementById(
-      "add-new-task__category__input"
-    );
-    console.log(inputDatalist.value);
   }
 });
 
@@ -264,3 +259,7 @@ setTimeout(() => {
 }, 300000);
 
 // Make categories and urgency
+// const inputDatalist = document.getElementById(
+//   "add-new-task__category__input"
+// );
+// console.log(inputDatalist.value);

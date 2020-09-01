@@ -9,10 +9,17 @@
   </head>
   <body>
     <header>
-      <img id="logo" src="./img/logo.svg" alt="logo" />
-      <h1 id="title">To-do list</h1>
-    </header>
-    <main>
+      <div id="top-section">
+        <div id="top-section__date">1st September 2020</div>
+        <div id="top-section__icons">
+          <div id="top-section__dark-mode">
+            <img src="./img/moon.svg" />
+          </div>
+          <div id="top-section__reload">
+            <img src="./img/refresh.svg" />
+          </div>
+        </div>
+      </div>
       <div id="add-new-task">
         <input
           type="text"
@@ -58,14 +65,27 @@
           </datalist>
         </div>
       </div>
+    </header>
+    <main>
+      <div id="buttons">
+        <button id="buttons__filter">Filter by category</button>
+        <button id="buttons__clear">Clear completed tasks</button>
+      </div>
       <div id="tasks">
-        <div id="tasks__header">
-          <h2 id="tasks__header__title">Tasks</h2>
-          <button id="tasks__header__button">Clear completed tasks</button>
-        </div>
-        <ul id="tasks__list"></ul>
+        <details class="tasks__task">
+          <summary contenteditable="true" class="tasks__task__title">
+            Inbox
+          </summary>
+          <ul id="tasks__list"></ul>
+        </details>
       </div>
     </main>
+    <template id="task-list-template">
+      <details class="tasks__task">
+        <summary contenteditable="true" class="tasks__task__title"></summary>
+        <ul id="tasks__list"></ul>
+      </details>
+    </template>
     <template id="task-template">
       <li class="task-template__item" draggable="false">
         <div class="task-template__item__drag">
