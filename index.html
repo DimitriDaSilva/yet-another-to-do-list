@@ -10,7 +10,7 @@
   <body>
     <header>
       <div id="top-section">
-        <div id="top-section__date">1st September 2020</div>
+        <div id="top-section__date">2nd September 2020</div>
         <div id="top-section__icons">
           <div id="top-section__dark-mode">
             <img src="./img/moon.svg" />
@@ -26,7 +26,6 @@
           id="add-new-task__input"
           placeholder="Pick up seeds for Hedwig"
         />
-        <button id="add-new-task__button">+</button>
         <div id="add-new-task__category" class="add-new-task__category-urgency">
           <label for="add-new-task__category__input">Category</label>
           <input
@@ -41,7 +40,6 @@
             id="add-new-task__category__list"
             class="add-new-task__category-urgency__list"
           >
-            <option value="Inbox"></option>
           </datalist>
         </div>
         <div id="add-new-task__urgency" class="add-new-task__category-urgency">
@@ -64,26 +62,23 @@
             <option value="None"></option>
           </datalist>
         </div>
+        <button id="add-new-task__button">+</button>
       </div>
     </header>
     <main>
       <div id="buttons">
-        <button id="buttons__filter">Filter by category</button>
+        <button id="buttons__filter">Filter by urgency</button>
         <button id="buttons__clear">Clear completed tasks</button>
       </div>
-      <div id="tasks">
-        <details class="tasks__task">
-          <summary contenteditable="true" class="tasks__task__title">
-            Inbox
-          </summary>
-          <ul id="tasks__list"></ul>
-        </details>
-      </div>
+      <div id="tasks"></div>
     </main>
     <template id="task-list-template">
-      <details class="tasks__task">
-        <summary contenteditable="true" class="tasks__task__title"></summary>
-        <ul id="tasks__list"></ul>
+      <details class="task-list-template__details">
+        <summary
+          contenteditable="true"
+          class="task-list-template__details__title"
+        ></summary>
+        <ul class="task-list-template__details__list"></ul>
       </details>
     </template>
     <template id="task-template">

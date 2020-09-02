@@ -102,8 +102,6 @@ main {
   border: 0.5px var(--darkest-color) solid;
   border-radius: 4px;
   justify-self: stretch;
-  /* flex: 0 0 1.8rem; */
-  /* height: 1.8rem; */
   padding: 0;
   color: var(--dark-color);
   background: var(--light-color);
@@ -112,9 +110,6 @@ main {
   font-weight: 100;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
-  /* display: block; */
-  /* line-height: 1px; */
-  /* margin: 2rem 2rem 2rem 0rem; */
   grid-area: button;
 }
 
@@ -226,11 +221,11 @@ main {
   width: 90%;
 }
 
-.tasks__task {
+.task-list-template__details {
   margin-top: 1rem;
 }
 
-.tasks__task__title {
+.task-list-template__details__title {
   font-size: larger;
   font-weight: 500;
   color: var(--dark-color);
@@ -239,8 +234,8 @@ main {
   padding-bottom: 0.4rem;
 }
 
-.tasks__task[open] #tasks__list {
-  animation: fadeIn 0.5s ease-in-out;
+.task-list-template__details[open] .task-list-template__details__list {
+  animation: fadeIn 0.4s ease-in-out;
 }
 
 @keyframes fadeIn {
@@ -284,7 +279,7 @@ ul label svg {
   cursor: pointer;
 }
 
-#tasks__list input {
+.task-list-template__details__list input {
   position: absolute;
   left: 12%;
   opacity: 0;
