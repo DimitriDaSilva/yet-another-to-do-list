@@ -15,6 +15,8 @@ const tasksContainer = document.querySelector("#tasks");
 const taskListTemplate = document.querySelector("#task-list-template");
 const taskTemplate = document.querySelector("#task-template");
 
+var tasksList;
+
 // Set the arrays with the categories and levels of urgency
 let categoryArray = [];
 let urgencyArray = [];
@@ -32,14 +34,6 @@ filterBtn.addEventListener("click", () => {
   } else {
     filterMode = filters[0];
     filterBtn.textContent = "Filter by urgency";
-  }
-});
-
-window.addEventListener("load", () => {
-  if (filterMode == filters[0]) {
-    filterBtn.textContent = "Filter by urgency";
-  } else {
-    filterBtn.textContent = "Filter by category";
   }
 });
 
@@ -117,6 +111,9 @@ function addTask(taskString, category, urgency, taskCheck = false) {
     copyListNode.classList.add(category);
 
     tasksContainer.append(copyListNode);
+
+    tasksList = document.querySelectorAll(".task-list-template__details__list");
+    console.log(tasksList);
   } else if (filterMode == filters[1] && urgencyArray.indexOf(urgency) == -1) {
     // Insert category to existing ones
     urgencyArray.push(urgency);
@@ -131,6 +128,8 @@ function addTask(taskString, category, urgency, taskCheck = false) {
     copyListNode.classList.add(urgency);
 
     tasksContainer.append(copyListNode);
+
+    tasksList = document.querySelectorAll(".task-list-template__details__list");
   }
 
   const allDetails = tasksContainer.querySelectorAll("details");
@@ -208,200 +207,215 @@ function addOptionToDatalist(userInput, type) {
   }
 }
 
-// // Before closing the tab, load the info on the localStorage
-// window.addEventListener("beforeunload", () => {
-//   // Clear previous cache
-//   localStorage.clear();
+// Before closing the tab, load the info on the localStorage
+window.addEventListener("beforeunload", () => {
+  // Clear previous cache
+  localStorage.clear();
 
-//   // Set the array where we'll store the objects with task info
-//   let tasksArray = [];
+  // Set the array where we'll store the objects with task info
+  const tasksArray = [];
 
-//   let liElements = document.getElementsByTagName("li");
+  const liElements = document.getElementsByTagName("li");
 
-//   for (let i = 0; i < liElements.length; i++) {
-//     // Get check info
-//     let input = liElements[i].querySelector("input");
-//     let checkedItem = input.checked;
+  for (let i = 0; i < liElements.length; i++) {
+    // Get check info
+    const input = liElements[i].querySelector("input");
+    const checkedItem = input.checked;
 
-//     // Get task text
-//     let text = liElements[i].querySelector("p");
-//     let taskItem = text.outerText;
+    // Get task text
+    const text = liElements[i].querySelector("p");
+    const taskItem = text.outerText;
 
-//     let allItems = {
-//       checked: checkedItem,
-//       task: taskItem,
-//     };
+    // Get category
+    const category = liElements[i].classList.item(1);
 
-//     tasksArray.push(allItems);
-//   }
+    // Get urgency
+    const urgency = liElements[i].classList.item(2);
 
-//   localStorage.setItem("tasks", JSON.stringify(tasksArray));
-// });
+    // Put each task in an object and store them in an array
+    const allItems = {
+      checked: checkedItem,
+      task: taskItem,
+      category: category,
+      urgency: urgency,
+    };
 
-// // Onload, download the info from the localStorage
-// window.addEventListener("load", () => {
-//   const data = JSON.parse(localStorage.getItem("tasks"));
-//   data.forEach((item) => {
-//     addTask(item.task, item.checked);
-//   });
+    tasksArray.push(allItems);
+  }
 
-//   // if (localStorage.length == 1 && data.length == 0) {
-//   //   addTask("Crush my goals of the month", true);
-//   //   addTask("Go find Voldemort's nose");
-//   //   addTask("Date my best friend's little sister");
-//   // }
-// });
+  localStorage.setItem("tasks", JSON.stringify(tasksArray));
+  localStorage.setItem("filterMode", filterMode);
+});
 
-// // Set a mutation observer so that the eventListeners are up to date with the current crosses and the drag-and-drop symbols
+// Onload, download the info from the localStorage
+window.addEventListener("load", () => {
+  // Setting the last filterMode used
+  filterMode = localStorage.getItem("filterMode");
+  if (filterMode == filters[0]) {
+    filterBtn.textContent = "Filter by urgency";
+  } else {
+    filterBtn.textContent = "Filter by category";
+  }
 
-// // We are only observing if a task (i.e. a li element) gets added or deleted
-// const config = { attributes: true, childList: true };
+  const data = JSON.parse(localStorage.getItem("tasks"));
+  data.forEach((item) => {
+    addTask(item.task, item.category, item.urgency, item.checked);
+  });
 
-// // Callback function to execute when mutation are observed
-// const callback = function (mutationsList, observer) {
-//   for (let mutation of mutationsList) {
-//     if (mutation.type === "childList") {
-//       setListenersCrosses();
-//       makeElementsDraggable();
-//     }
-//   }
-// };
+  // if (localStorage.length == 1 && data.length == 0) {
+  //   addTask("Crush my goals of the month", true);
+  //   addTask("Go find Voldemort's nose");
+  //   addTask("Date my best friend's little sister");
+  // }
+});
 
-// // Create the observer instance linked to the callback function
-// const observer = new MutationObserver(callback);
+// Set a mutation observer so that the eventListeners are up to date with the current crosses and the drag-and-drop symbols
 
-// // console.log(tasksContainer);
-// // tasksContainer.forEach((details) => {
-// //   const ul = details.querySelector("ul");
-// //   observer.observe(ul, config);
-// // });
+// We are only observing if a task (i.e. a li element) gets added or deleted
+const config = { attributes: true, childList: true, subtree: true };
 
-// // Start checking for DOM tree mutations
-// observer.observe(taskList, config);
+// Callback function to execute when mutation are observed
+const callback = function (mutationsList, observer) {
+  for (let mutation of mutationsList) {
+    if (mutation.type == "childList") {
+      setListenersCrosses();
+      makeElementsDraggable();
+    }
+  }
+};
 
-// // Set a loop listening to all crosses
-// function setListenersCrosses() {
-//   let crossDeleteBtns = document.getElementsByClassName(
-//     "task-template__item__cross"
-//   );
-//   for (let i = 0; i < crossDeleteBtns.length; i++) {
-//     let cross = crossDeleteBtns[i];
-//     cross.addEventListener("click", () => {
-//       let crossId = cross.id;
-//       const tasks = document.querySelectorAll(".task-template__item");
-//       tasks.forEach((task) => {
-//         const inputId = task.querySelector("input").id;
-//         if (inputId == crossId) {
-//           task.remove();
-//         }
-//       });
-//     });
-//   }
-// }
+// Create the observer instance linked to the callback function
+const observer = new MutationObserver(callback);
 
-// // Make elements draggable
-// function makeElementsDraggable() {
-//   const tasks = document.querySelectorAll(".task-template__item");
+// Start checking for DOM tree mutations
+observer.observe(tasksContainer, config);
 
-//   tasks.forEach((task) => {
-//     // dragLogo is the 6-dots logo representing the UI elements for drag-and-drop
-//     // Its default behaviour was not logical, so I fixed it
-//     // It's being called in both startDragStyle and endDragStyle so I'm setting it before so that it doesn't run twice
-//     const dragLogo = task.querySelector(".task-template__item__drag");
+// Set a loop listening to all crosses
+function setListenersCrosses() {
+  let crossDeleteBtns = document.getElementsByClassName(
+    "task-template__item__cross"
+  );
+  for (let i = 0; i < crossDeleteBtns.length; i++) {
+    let cross = crossDeleteBtns[i];
+    cross.addEventListener("click", () => {
+      let crossId = cross.id;
+      const tasks = document.querySelectorAll(".task-template__item");
+      tasks.forEach((task) => {
+        const inputId = task.querySelector("input").id;
+        if (inputId == crossId) {
+          task.remove();
+        }
+      });
+    });
+  }
+}
 
-//     // Extract the value of draggable of the task
-//     // Which is initially false but becomes temporarely true onclick
-//     let draggable = task.draggable;
+// Make elements draggable
+function makeElementsDraggable() {
+  const tasks = document.querySelectorAll(".task-template__item");
 
-//     // Set the style of the task while it's being dragged
-//     // Handle the behaviour for touch-based devices
-//     let touchTimeout;
+  tasks.forEach((task) => {
+    // dragLogo is the 6-dots logo representing the UI elements for drag-and-drop
+    // Its default behaviour was not logical, so I fixed it
+    // It's being called in both startDragStyle and endDragStyle so I'm setting it before so that it doesn't run twice
+    const dragLogo = task.querySelector(".task-template__item__drag");
 
-//     task.addEventListener("touchstart", () => {
-//       touchTimeout = setTimeout(() => {
-//         task.draggable = true;
-//         task.classList.add("task-template__item--dragging");
-//         dragLogo.classList.add("task-template__item--ongoing-drag");
-//       }, 200);
-//     });
+    // Extract the value of draggable of the task
+    // Which is initially false but becomes temporarely true onclick
+    let draggable = task.draggable;
 
-//     task.addEventListener("touchend", () => {
-//       clearTimeout(touchTimeout);
-//       task.draggable = false;
-//       task.classList.remove("task-template__item--dragging");
-//       dragLogo.classList.remove("task-template__item--ongoing-drag");
-//     });
+    // Set the style of the task while it's being dragged
+    // Handle the behaviour for touch-based devices
+    let touchTimeout;
 
-//     // Set the style of the task while it's being dragged
-//     // touchmove for touch-based device and dragstart for mouse-based ones
+    task.addEventListener("touchstart", () => {
+      touchTimeout = setTimeout(() => {
+        task.draggable = true;
+        task.classList.add("task-template__item--dragging");
+        dragLogo.classList.add("task-template__item--ongoing-drag");
+      }, 200);
+    });
 
-//     // task.addEventListener("touchmove", startDrag);
+    task.addEventListener("touchend", () => {
+      clearTimeout(touchTimeout);
+      task.draggable = false;
+      task.classList.remove("task-template__item--dragging");
+      dragLogo.classList.remove("task-template__item--ongoing-drag");
+    });
 
-//     // Revert back to original style once task dropped
-//     // touchend for touch-based devices and dragend for mouse-based ones
-//     // task.addEventListener("touchend", endDrag);
+    // Set the style of the task while it's being dragged
+    // Handle the behaviour for mouse-based devices
+    task.addEventListener("mousedown", () => {
+      task.draggable = true;
+    });
 
-//     // Set the style of the task while it's being dragged
-//     // Handle the behaviour for mouse-based devices
-//     task.addEventListener("mousedown", () => {
-//       task.draggable = true;
-//     });
+    task.addEventListener("dragstart", () => {
+      task.classList.add("task-template__item--dragging");
+      dragLogo.classList.add("task-template__item--ongoing-drag");
+    });
 
-//     task.addEventListener("dragstart", () => {
-//       task.classList.add("task-template__item--dragging");
-//       dragLogo.classList.add("task-template__item--ongoing-drag");
-//     });
+    task.addEventListener("dragend", () => {
+      task.classList.remove("task-template__item--dragging");
+      dragLogo.classList.remove("task-template__item--ongoing-drag");
+      task.draggable = false;
+    });
+  });
+}
 
-//     task.addEventListener("dragend", () => {
-//       task.classList.remove("task-template__item--dragging");
-//       dragLogo.classList.remove("task-template__item--ongoing-drag");
-//       task.draggable = false;
-//     });
-//   });
-// }
+document.addEventListener("mousedown", () => {
+  tasksList.forEach((taskList) => {
+    // Checking the position of the task based on its position on the y axis
+    // touchmove for touch-based devices
+    taskList.addEventListener("touchmove", (e) => {
+      e.preventDefault();
+      const touchY = e.touches[0].clientY;
+      const afterElement = getDragAfterElement(taskList, touchY);
+      const task = document.querySelector(".task-template__item--dragging");
+      if (afterElement == null) {
+        taskList.appendChild(task);
+      } else {
+        taskList.insertBefore(task, afterElement);
+      }
+    });
 
-// // Checking the position of the task based on its position on the y axis
-// // touchmove for touch-based devices
-// taskList.addEventListener("touchmove", (e) => {
-//   e.preventDefault();
-//   const touchY = e.touches[0].clientY;
-//   const afterElement = getDragAfterElement(taskList, touchY);
-//   const task = document.querySelector(".task-template__item--dragging");
-//   taskList.insertBefore(task, afterElement);
-// });
+    // dragover for mouse-based devices
+    taskList.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      const afterElement = getDragAfterElement(taskList, e.clientY);
+      const task = document.querySelector(".task-template__item--dragging");
+      if (afterElement == null) {
+        taskList.appendChild(task);
+      } else {
+        taskList.insertBefore(task, afterElement);
+      }
+    });
+  });
+});
 
-// // dragover for mouse-based devices
-// taskList.addEventListener("dragover", (e) => {
-//   e.preventDefault();
-//   const afterElement = getDragAfterElement(taskList, e.clientY);
-//   const task = document.querySelector(".task-template__item--dragging");
-//   taskList.insertBefore(task, afterElement);
-// });
+// Function that actually returns the tasks over which the user hovers with the dragged element
+// Credit to Web Dev Simplified's YouTube channel for this sweet piece of code
+function getDragAfterElement(container, y) {
+  const draggableElements = [
+    ...container.querySelectorAll(
+      ".task-template__item:not(.task-template__item--dragging)"
+    ),
+  ];
 
-// // Function that actually returns the tasks over which the user hovers with the dragged element
-// // Credit to Web Dev Simplified's YouTube channel for this sweet piece of code
-// function getDragAfterElement(container, y) {
-//   const draggableElements = [
-//     ...container.querySelectorAll(
-//       ".task-template__item:not(.task-template__item--dragging)"
-//     ),
-//   ];
-
-//   return draggableElements.reduce(
-//     (closest, child) => {
-//       const box = child.getBoundingClientRect();
-//       const offset = y - box.top - box.height / 2;
-//       if (offset < 0 && offset > closest.offset) {
-//         return { offset: offset, element: child };
-//       } else {
-//         return closest;
-//       }
-//     },
-//     {
-//       offset: Number.NEGATIVE_INFINITY,
-//     }
-//   ).element;
-// }
+  return draggableElements.reduce(
+    (closest, child) => {
+      const box = child.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
+      if (offset < 0 && offset > closest.offset) {
+        return { offset: offset, element: child };
+      } else {
+        return closest;
+      }
+    },
+    {
+      offset: Number.NEGATIVE_INFINITY,
+    }
+  ).element;
+}
 
 // // Set an autosave every 5 minutes just in case the browser crashes
 // setTimeout(() => {

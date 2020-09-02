@@ -249,6 +249,10 @@ main {
   }
 }
 
+summary {
+  cursor: pointer;
+}
+
 summary::-webkit-details-marker {
   color: var(--darkest-color);
 }
