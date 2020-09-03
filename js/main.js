@@ -15,8 +15,6 @@ const tasksContainer = document.querySelector("#tasks");
 const taskListTemplate = document.querySelector("#task-list-template");
 const taskTemplate = document.querySelector("#task-template");
 
-var tasksList;
-
 // Set the arrays with the categories and levels of urgency
 let categoryArray = [];
 let urgencyArray = [];
@@ -25,8 +23,8 @@ let urgencyArray = [];
 let id = 1;
 
 // Handling the filter
-let filters = ["category", "urgency"];
-let filterMode = filters[0];
+const filters = ["category", "urgency"];
+let filterMode = "";
 filterBtn.addEventListener("click", () => {
   if (filterMode == filters[0]) {
     filterMode = filters[1];
@@ -112,8 +110,8 @@ function addTask(taskString, category, urgency, taskCheck = false) {
 
     tasksContainer.append(copyListNode);
 
-    tasksList = document.querySelectorAll(".task-list-template__details__list");
-    console.log(tasksList);
+    setTaskListListeners();
+    setTaskListListenersTouch();
   } else if (filterMode == filters[1] && urgencyArray.indexOf(urgency) == -1) {
     // Insert category to existing ones
     urgencyArray.push(urgency);
@@ -129,7 +127,8 @@ function addTask(taskString, category, urgency, taskCheck = false) {
 
     tasksContainer.append(copyListNode);
 
-    tasksList = document.querySelectorAll(".task-list-template__details__list");
+    setTaskListListeners();
+    setTaskListListenersTouch();
   }
 
   const allDetails = tasksContainer.querySelectorAll("details");
@@ -173,6 +172,9 @@ function addTask(taskString, category, urgency, taskCheck = false) {
   categoryInput.value = "";
   urgencyInput.value = "";
   id++;
+
+  setListenersCrosses();
+  makeElementsDraggable();
 }
 
 clearCompletedBtn.addEventListener("click", () => {
@@ -245,22 +247,28 @@ window.addEventListener("beforeunload", () => {
 
   localStorage.setItem("tasks", JSON.stringify(tasksArray));
   localStorage.setItem("filterMode", filterMode);
+  // localStorage.clear();
 });
 
 // Onload, download the info from the localStorage
 window.addEventListener("load", () => {
   // Setting the last filterMode used
   filterMode = localStorage.getItem("filterMode");
+  if (filterMode == null) {
+    filterMode = filters[0];
+  }
   if (filterMode == filters[0]) {
     filterBtn.textContent = "Filter by urgency";
   } else {
     filterBtn.textContent = "Filter by category";
   }
 
-  const data = JSON.parse(localStorage.getItem("tasks"));
-  data.forEach((item) => {
-    addTask(item.task, item.category, item.urgency, item.checked);
-  });
+  if (localStorage.getItem("tasks") != null) {
+    const data = JSON.parse(localStorage.getItem("tasks"));
+    data.forEach((item) => {
+      addTask(item.task, item.category, item.urgency, item.checked);
+    });
+  }
 
   // if (localStorage.length == 1 && data.length == 0) {
   //   addTask("Crush my goals of the month", true);
@@ -278,8 +286,8 @@ const config = { attributes: true, childList: true, subtree: true };
 const callback = function (mutationsList, observer) {
   for (let mutation of mutationsList) {
     if (mutation.type == "childList") {
-      setListenersCrosses();
-      makeElementsDraggable();
+      // setListenersCrosses();
+      // makeElementsDraggable();
     }
   }
 };
@@ -362,35 +370,50 @@ function makeElementsDraggable() {
   });
 }
 
-document.addEventListener("mousedown", () => {
-  tasksList.forEach((taskList) => {
-    // Checking the position of the task based on its position on the y axis
-    // touchmove for touch-based devices
-    taskList.addEventListener("touchmove", (e) => {
-      e.preventDefault();
-      const touchY = e.touches[0].clientY;
-      const afterElement = getDragAfterElement(taskList, touchY);
-      const task = document.querySelector(".task-template__item--dragging");
-      if (afterElement == null) {
-        taskList.appendChild(task);
-      } else {
-        taskList.insertBefore(task, afterElement);
-      }
-    });
+// For touch-based devices
+function setTaskListListenersTouch() {
+  const tasksList = document.querySelectorAll(
+    ".task-list-template__details__list"
+  );
 
+  document.addEventListener("touchmove", function (e) {
+    const touchY = e.touches[0].clientY;
+    const task = document.querySelector(".task-template__item--dragging");
+    tasksList.forEach((taskList) => {
+      taskList.addEventListener("touchmove", (e) => {
+        e.preventDefault();
+        const afterElement = getDragAfterElement(taskList, touchY);
+        // console.log(afterElement);
+
+        if (afterElement == null) {
+          taskList.appendChild(task);
+        } else {
+          taskList.insertBefore(task, afterElement);
+        }
+      });
+    });
+  });
+}
+
+// For mouse-based devices
+function setTaskListListeners() {
+  const tasksList = document.querySelectorAll(
+    ".task-list-template__details__list"
+  );
+  tasksList.forEach((taskList) => {
     // dragover for mouse-based devices
     taskList.addEventListener("dragover", (e) => {
       e.preventDefault();
       const afterElement = getDragAfterElement(taskList, e.clientY);
       const task = document.querySelector(".task-template__item--dragging");
-      if (afterElement == null) {
-        taskList.appendChild(task);
-      } else {
-        taskList.insertBefore(task, afterElement);
-      }
+      // if (afterElement == null) {
+      //   taskList.appendChild(task);
+      // } else {
+      taskList.insertBefore(task, afterElement);
+      // }
     });
   });
-});
+}
 
 // Function that actually returns the tasks over which the user hovers with the dragged element
 // Credit to Web Dev Simplified's YouTube channel for this sweet piece of code
