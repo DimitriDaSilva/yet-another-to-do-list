@@ -17,11 +17,6 @@
   --lightest-color: #ffffff;
 }
 
-div {
-  color: var(--bright-color);
-  background: rgba(var(--darkest-color), 0.5);
-}
-
 body {
   margin: 0;
   font-family: "Ubuntu", sans-serif;
@@ -274,6 +269,34 @@ summary::-webkit-details-marker {
   height: 20px;
   line-height: 45px;
   color: var(--light-ish-color);
+}
+
+.task-list-template__details__button {
+  background: none;
+  border: none;
+  width: 30px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.more-menu-template__container {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 150px;
+  border: 0.05px solid var(--light-ish-color);
+  border-radius: 4px;
+  background: var(--light-color);
+  padding: 0.4rem;
+  box-shadow: 5px 5px 20px var(--light-ish-color);
+  position: absolute;
+}
+
+.more-menu-template__container img {
+  width: 25px;
+  filter: invert(3%) sepia(94%) saturate(7349%) hue-rotate(246deg)
+    brightness(102%) contrast(95%);
+  cursor: pointer;
 }
 
 ul {

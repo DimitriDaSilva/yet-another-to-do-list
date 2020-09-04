@@ -16,6 +16,7 @@ const urgencyInput = document.querySelector("#add-new-task__urgency__input");
 const tasksContainer = document.querySelector("#tasks");
 const taskListTemplate = document.querySelector("#task-list-template");
 const taskTemplate = document.querySelector("#task-template");
+const moreMenuTemplate = document.querySelector("#more-menu-template");
 
 // Set the arrays with the categories and levels of urgency
 let categoryArray = [];
@@ -171,6 +172,7 @@ function addTask(taskString, category, urgency, taskCheck = false) {
 
   setListenersCrosses();
   makeElementsDraggable();
+  setListenersDots();
 }
 
 clearCompletedBtn.addEventListener("click", () => {
@@ -443,8 +445,6 @@ setTimeout(() => {
   location = location;
 }, 300000);
 
-function setListenersDots() {}
-
 // Accessing the variable
 // const color = element.style.getPropertyValue("--darkest-color");
 
@@ -452,3 +452,55 @@ function setListenersDots() {}
 // element.style.setProperty("--darkest-color", "#e9ecef");
 
 // https://dev.to/ananyaneogi/create-a-dark-light-mode-switch-with-css-variables-34l8
+
+function setListenersDots() {
+  const dotsBtns = document.querySelectorAll(
+    ".task-list-template__details__button"
+  );
+  const moreMenuTemplateNode = document.importNode(
+    moreMenuTemplate.content,
+    true
+  );
+  const copyMoreMenu = moreMenuTemplateNode.querySelector("div");
+  for (let i = 0; i < dotsBtns.length; i++) {
+    const btn = dotsBtns[i];
+    btn.addEventListener("click", (e) => {
+      // Position more menu on Y axis
+      const halfHeight = copyMoreMenu.offsetHeight / 2;
+      const yPosition = e.clientY - halfHeight;
+      copyMoreMenu.style.top = yPosition + "px";
+
+      // Position more menu on X axis
+      const width = copyMoreMenu.offsetWidth;
+      const xPosition = e.clientX - width;
+      copyMoreMenu.style.left = xPosition + "px";
+
+      document.body.appendChild(copyMoreMenu);
+
+      const moreMenu = document.querySelector(".more-menu-template__container");
+
+      setTimeout(() => {
+        moreMenu.remove();
+      }, 1000);
+    });
+  }
+}
+
+function setListenersCrosses() {
+  const crossDeleteBtns = document.getElementsByClassName(
+    "task-template__item__cross"
+  );
+  for (let i = 0; i < crossDeleteBtns.length; i++) {
+    const cross = crossDeleteBtns[i];
+    cross.addEventListener("click", () => {
+      const crossId = cross.id;
+      const tasks = document.querySelectorAll(".task-template__item");
+      tasks.forEach((task) => {
+        const inputId = task.querySelector("input").id;
+        if (inputId == crossId) {
+          task.remove();
+        }
+      });
+    });
+  }
+}

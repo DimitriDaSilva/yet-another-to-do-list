@@ -79,7 +79,9 @@
       <details class="task-list-template__details">
         <summary contenteditable="false">
           <p class="task-list-template__details__title"></p>
-          <span class="task-list-template__details__dots">&#8411;</span>
+          <button class="task-list-template__details__button">
+            <span class="task-list-template__details__dots">&#8411;</span>
+          </button>
         </summary>
         <ul class="task-list-template__details__list"></ul>
       </details>
@@ -106,6 +108,25 @@
         <p class="task-template__item__text" contenteditable="true"></p>
         <span class="task-template__item__cross">&#10005;</span>
       </li>
+    </template>
+    <template id="more-menu-template">
+      <div class="more-menu-template__container">
+        <img
+          src="./img/paint-brush.svg"
+          alt="paint-brush"
+          class="more-menu-template__color"
+        />
+        <img
+          src="./img/pencil.svg"
+          alt="pencil"
+          class="more-menu-template__container__edit"
+        />
+        <img
+          src="./img/trash-can.svg"
+          alt="trash-can"
+          class="more-menu-template__container__trash"
+        />
+      </div>
     </template>
     <script src="./js/main.js"></script>
     <script src="./js/accessibility.js"></script>
