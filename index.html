@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
     <title>Another to-do list</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="./img/logo.png" />
@@ -10,9 +13,9 @@
   <body>
     <header>
       <div id="top-section">
-        <div id="top-section__date">2nd September 2020</div>
+        <div id="top-section__date">4th September 2020</div>
         <div id="top-section__icons">
-          <div id="top-section__dark-mode">
+          <div id="top-section__dark-mode" draggable="true">
             <img src="./img/moon.svg" />
           </div>
           <div id="top-section__reload">
@@ -74,10 +77,10 @@
     </main>
     <template id="task-list-template">
       <details class="task-list-template__details">
-        <summary
-          contenteditable="false"
-          class="task-list-template__details__title"
-        ></summary>
+        <summary contenteditable="false">
+          <p class="task-list-template__details__title"></p>
+          <span class="task-list-template__details__dots">&#8411;</span>
+        </summary>
         <ul class="task-list-template__details__list"></ul>
       </details>
     </template>

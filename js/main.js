@@ -1,3 +1,5 @@
+"use strick";
+
 // Select buttons
 const addTaskBtn = document.querySelector("#add-new-task__button");
 const clearCompletedBtn = document.querySelector("#buttons__clear");
@@ -109,9 +111,6 @@ function addTask(taskString, category, urgency, taskCheck = false) {
     copyListNode.classList.add(category);
 
     tasksContainer.append(copyListNode);
-
-    setTaskListListeners();
-    setTaskListListenersTouch();
   } else if (filterMode == filters[1] && urgencyArray.indexOf(urgency) == -1) {
     // Insert category to existing ones
     urgencyArray.push(urgency);
@@ -126,9 +125,6 @@ function addTask(taskString, category, urgency, taskCheck = false) {
     copyListNode.classList.add(urgency);
 
     tasksContainer.append(copyListNode);
-
-    setTaskListListeners();
-    setTaskListListenersTouch();
   }
 
   const allDetails = tasksContainer.querySelectorAll("details");
@@ -300,13 +296,13 @@ observer.observe(tasksContainer, config);
 
 // Set a loop listening to all crosses
 function setListenersCrosses() {
-  let crossDeleteBtns = document.getElementsByClassName(
+  const crossDeleteBtns = document.getElementsByClassName(
     "task-template__item__cross"
   );
   for (let i = 0; i < crossDeleteBtns.length; i++) {
-    let cross = crossDeleteBtns[i];
+    const cross = crossDeleteBtns[i];
     cross.addEventListener("click", () => {
-      let crossId = cross.id;
+      const crossId = cross.id;
       const tasks = document.querySelectorAll(".task-template__item");
       tasks.forEach((task) => {
         const inputId = task.querySelector("input").id;
@@ -328,17 +324,14 @@ function makeElementsDraggable() {
     // It's being called in both startDragStyle and endDragStyle so I'm setting it before so that it doesn't run twice
     const dragLogo = task.querySelector(".task-template__item__drag");
 
-    // Extract the value of draggable of the task
-    // Which is initially false but becomes temporarely true onclick
-    let draggable = task.draggable;
-
     // Set the style of the task while it's being dragged
     // Handle the behaviour for touch-based devices
     let touchTimeout;
 
-    task.addEventListener("touchstart", () => {
+    task.addEventListener("touchstart", (e) => {
       touchTimeout = setTimeout(() => {
         task.draggable = true;
+        document.body.classList.add("stop-scroll");
         task.classList.add("task-template__item--dragging");
         dragLogo.classList.add("task-template__item--ongoing-drag");
       }, 200);
@@ -347,6 +340,7 @@ function makeElementsDraggable() {
     task.addEventListener("touchend", () => {
       clearTimeout(touchTimeout);
       task.draggable = false;
+      document.body.classList.remove("stop-scroll");
       task.classList.remove("task-template__item--dragging");
       dragLogo.classList.remove("task-template__item--ongoing-drag");
     });
@@ -371,48 +365,52 @@ function makeElementsDraggable() {
 }
 
 // For touch-based devices
-function setTaskListListenersTouch() {
-  const tasksList = document.querySelectorAll(
-    ".task-list-template__details__list"
-  );
-
-  document.addEventListener("touchmove", function (e) {
-    const touchY = e.touches[0].clientY;
-    const task = document.querySelector(".task-template__item--dragging");
-    tasksList.forEach((taskList) => {
-      taskList.addEventListener("touchmove", (e) => {
-        e.preventDefault();
-        const afterElement = getDragAfterElement(taskList, touchY);
-        // console.log(afterElement);
-
-        if (afterElement == null) {
-          taskList.appendChild(task);
-        } else {
-          taskList.insertBefore(task, afterElement);
-        }
-      });
-    });
-  });
-}
+tasksContainer.addEventListener("touchmove", (e) => {
+  const myLocation = e.targetTouches[0];
+  const target = document.elementFromPoint(myLocation.pageX, myLocation.pageY);
+  if (target != null) {
+    const targetUl = getParentElement(target, "UL");
+    if (targetUl.tagName == "UL") {
+      e.preventDefault();
+      const touchY = e.targetTouches[0].pageY;
+      const afterElement = getDragAfterElement(targetUl, touchY);
+      const task = document.querySelector(".task-template__item--dragging");
+      if (afterElement == null) {
+        targetUl.appendChild(task);
+      } else {
+        targetUl.insertBefore(task, afterElement);
+      }
+    }
+  }
+});
 
 // For mouse-based devices
-function setTaskListListeners() {
-  const tasksList = document.querySelectorAll(
-    ".task-list-template__details__list"
-  );
-  tasksList.forEach((taskList) => {
-    // dragover for mouse-based devices
-    taskList.addEventListener("dragover", (e) => {
+tasksContainer.addEventListener("dragover", (e) => {
+  const target = document.elementFromPoint(e.clientX, e.clientY);
+  if (target != null) {
+    const targetUl = getParentElement(target, "UL");
+    if (targetUl.tagName == "UL") {
       e.preventDefault();
-      const afterElement = getDragAfterElement(taskList, e.clientY);
+      const afterElement = getDragAfterElement(targetUl, e.clientY);
       const task = document.querySelector(".task-template__item--dragging");
-      // if (afterElement == null) {
-      //   taskList.appendChild(task);
-      // } else {
-      taskList.insertBefore(task, afterElement);
-      // }
-    });
-  });
+      if (afterElement == null) {
+        targetUl.appendChild(task);
+      } else {
+        targetUl.insertBefore(task, afterElement);
+      }
+    }
+  }
+});
+
+function getParentElement(object, tag) {
+  console.log(object);
+  if (object.tagName == tag) {
+    return object;
+  }
+  if (object.tagName == "BODY") {
+    return {};
+  }
+  return getParentElement(object.parentElement, tag);
 }
 
 // Function that actually returns the tasks over which the user hovers with the dragged element
@@ -440,7 +438,17 @@ function getDragAfterElement(container, y) {
   ).element;
 }
 
-// // Set an autosave every 5 minutes just in case the browser crashes
-// setTimeout(() => {
-//   location = location;
-// }, 300000);
+// Set an autosave every 5 minutes just in case the browser crashes
+setTimeout(() => {
+  location = location;
+}, 300000);
+
+function setListenersDots() {}
+
+// Accessing the variable
+// const color = element.style.getPropertyValue("--darkest-color");
+
+// // Modifying the variable
+// element.style.setProperty("--darkest-color", "#e9ecef");
+
+// https://dev.to/ananyaneogi/create-a-dark-light-mode-switch-with-css-variables-34l8
