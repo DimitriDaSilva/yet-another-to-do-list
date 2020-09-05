@@ -77,7 +77,7 @@
     </main>
     <template id="task-list-template">
       <details class="task-list-template__details">
-        <summary contenteditable="false">
+        <summary>
           <p class="task-list-template__details__title"></p>
           <button class="task-list-template__details__button">
             <span class="task-list-template__details__dots">&#8411;</span>
@@ -111,21 +111,15 @@
     </template>
     <template id="more-menu-template">
       <div class="more-menu-template__container">
-        <img
-          src="./img/paint-brush.svg"
-          alt="paint-brush"
-          class="more-menu-template__color"
-        />
-        <img
-          src="./img/pencil.svg"
-          alt="pencil"
-          class="more-menu-template__container__edit"
-        />
-        <img
-          src="./img/trash-can.svg"
-          alt="trash-can"
-          class="more-menu-template__container__trash"
-        />
+        <button class="more-menu-template__container__color">
+          <img src="./img/paint-brush.svg" alt="paint-brush" />
+        </button>
+        <button class="more-menu-template__container__pencil">
+          <img src="./img/pencil.svg" alt="pencil" />
+        </button>
+        <button class="more-menu-template__container__trash">
+          <img src="./img/trash-can.svg" alt="trash-can" />
+        </button>
       </div>
     </template>
     <script src="./js/main.js"></script>

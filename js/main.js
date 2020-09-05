@@ -112,6 +112,8 @@ function addTask(taskString, category, urgency, taskCheck = false) {
     copyListNode.classList.add(category);
 
     tasksContainer.append(copyListNode);
+
+    setListenersDots(copyListNode);
   } else if (filterMode == filters[1] && urgencyArray.indexOf(urgency) == -1) {
     // Insert category to existing ones
     urgencyArray.push(urgency);
@@ -122,10 +124,18 @@ function addTask(taskString, category, urgency, taskCheck = false) {
     );
     title.textContent = urgency;
 
+    // Change title
+    const dots = copyListNode.querySelector(
+      ".task-list-template__details__button"
+    );
+    dots.id = urgency;
+
     // Add category and urgency to the class of the parentNode
     copyListNode.classList.add(urgency);
 
     tasksContainer.append(copyListNode);
+
+    setListenersDots(copyListNode);
   }
 
   const allDetails = tasksContainer.querySelectorAll("details");
@@ -172,7 +182,6 @@ function addTask(taskString, category, urgency, taskCheck = false) {
 
   setListenersCrosses();
   makeElementsDraggable();
-  setListenersDots();
 }
 
 clearCompletedBtn.addEventListener("click", () => {
@@ -453,54 +462,91 @@ setTimeout(() => {
 
 // https://dev.to/ananyaneogi/create-a-dark-light-mode-switch-with-css-variables-34l8
 
-function setListenersDots() {
-  const dotsBtns = document.querySelectorAll(
-    ".task-list-template__details__button"
-  );
+function setListenersDots(node) {
   const moreMenuTemplateNode = document.importNode(
     moreMenuTemplate.content,
     true
   );
   const copyMoreMenu = moreMenuTemplateNode.querySelector("div");
-  for (let i = 0; i < dotsBtns.length; i++) {
-    const btn = dotsBtns[i];
-    btn.addEventListener("click", (e) => {
-      // Position more menu on Y axis
+
+  node.addEventListener("click", listenerDots, false);
+
+  function listenerDots(e) {
+    const target = e.target;
+    const parent = target.parentElement;
+    const classTargeted = "task-list-template__details__button";
+    const hasClass = target.classList.contains(classTargeted);
+    if (hasClass) {
+      // We need to make it appear before setting its position so we append it with opacity 0 and turn it to 1 once its position is correct
+      // copyMoreMenu.style.opacity = 0;
+      parent.appendChild(copyMoreMenu);
+
       const halfHeight = copyMoreMenu.offsetHeight / 2;
       const yPosition = e.clientY - halfHeight;
       copyMoreMenu.style.top = yPosition + "px";
 
       // Position more menu on X axis
       const width = copyMoreMenu.offsetWidth;
-      const xPosition = e.clientX - width;
+      const xPosition = e.clientX - width - 10;
       copyMoreMenu.style.left = xPosition + "px";
 
-      document.body.appendChild(copyMoreMenu);
+      // Make it appear
+      copyMoreMenu.style.animation = "appear 0.2s forwards ease-in-out";
 
-      const moreMenu = document.querySelector(".more-menu-template__container");
+      setListenersTrash(parent);
+      setListenersEdit(parent, copyMoreMenu);
 
-      setTimeout(() => {
-        moreMenu.remove();
-      }, 1000);
-    });
+      // setTimeout(() => {
+      //   copyMoreMenu.remove();
+      // }, 1000);
+    }
   }
 }
 
-function setListenersCrosses() {
-  const crossDeleteBtns = document.getElementsByClassName(
-    "task-template__item__cross"
+function setListenersTrash(node, moreMenu) {
+  const trashIcon = document.querySelector(
+    ".more-menu-template__container__trash"
   );
-  for (let i = 0; i < crossDeleteBtns.length; i++) {
-    const cross = crossDeleteBtns[i];
-    cross.addEventListener("click", () => {
-      const crossId = cross.id;
-      const tasks = document.querySelectorAll(".task-template__item");
-      tasks.forEach((task) => {
-        const inputId = task.querySelector("input").id;
-        if (inputId == crossId) {
-          task.remove();
-        }
-      });
+  trashIcon.addEventListener("click", (e) => {
+    node.parentElement.remove();
+  });
+}
+
+function setListenersEdit(node, moreMenu) {
+  const editBtn = document.querySelector(
+    ".more-menu-template__container__pencil"
+  );
+  editBtn.addEventListener("click", (e) => {
+    const pElement = node.querySelector("p");
+    pElement.setAttribute("contenteditable", true);
+    pElement.focus();
+    const details = node.parentElement;
+    details.addEventListener("click", disableToggle, true);
+
+    isEditingFinished(pElement, details);
+
+    moreMenu.remove();
+  });
+}
+
+function disableToggle(event) {
+  event.preventDefault();
+}
+
+function isEditingFinished(pElement, details) {
+  pElement.addEventListener("keydown", (e) => {
+    if (e.keyCode == 13) {
+      details.removeEventListener("click", disableToggle, true);
+      pElement.setAttribute("contenteditable", false);
+    }
+  });
+
+  setTimeout(() => {
+    window.addEventListener("click", (e) => {
+      if (!pElement.contains(e.target)) {
+        details.removeEventListener("click", disableToggle, true);
+        pElement.setAttribute("contenteditable", false);
+      }
     });
-  }
+  }, 100);
 }

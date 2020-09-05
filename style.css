@@ -292,6 +292,22 @@ summary::-webkit-details-marker {
   position: absolute;
 }
 
+@keyframes appear {
+  0% {
+    transform: translateX(0.5rem);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.more-menu-template__container button {
+  background: none;
+  border: none;
+}
+
 .more-menu-template__container img {
   width: 25px;
   filter: invert(3%) sepia(94%) saturate(7349%) hue-rotate(246deg)
