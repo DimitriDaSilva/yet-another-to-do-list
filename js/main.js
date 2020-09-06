@@ -458,14 +458,6 @@ setTimeout(() => {
   location = location;
 }, 300000);
 
-// Accessing the variable
-// const color = element.style.getPropertyValue("--darkest-color");
-
-// // Modifying the variable
-// element.style.setProperty("--darkest-color", "#e9ecef");
-
-// https://dev.to/ananyaneogi/create-a-dark-light-mode-switch-with-css-variables-34l8
-
 function setListenersDots(node) {
   const moreMenuTemplateNode = document.importNode(
     moreMenuTemplate.content,
@@ -473,46 +465,56 @@ function setListenersDots(node) {
   );
   const copyMoreMenu = moreMenuTemplateNode.querySelector("div");
 
-  node.addEventListener("click", listenerDots, false);
+  const createListenerDots = function (node) {
+    return new Promise((resolve) => {
+      node.addEventListener("click", (e) => {
+        const target = e.target;
+        const parent = target.parentElement;
+        const classTargeted = "task-list-template__details__button";
+        const hasClass = target.classList.contains(classTargeted);
 
-  function listenerDots(e) {
-    const target = e.target;
-    const parent = target.parentElement;
-    const classTargeted = "task-list-template__details__button";
-    const hasClass = target.classList.contains(classTargeted);
+        if (hasClass) {
+          // We need to make it appear before setting its position so we append it with opacity 0 and turn it to 1 once its position is correct
+          parent.appendChild(copyMoreMenu);
 
-    if (hasClass) {
-      // We need to make it appear before setting its position so we append it with opacity 0 and turn it to 1 once its position is correct
-      parent.appendChild(copyMoreMenu);
+          const halfHeight = copyMoreMenu.offsetHeight / 2;
+          const yPosition = e.clientY - halfHeight;
+          copyMoreMenu.style.top = yPosition + "px";
 
-      const halfHeight = copyMoreMenu.offsetHeight / 2;
-      const yPosition = e.clientY - halfHeight;
-      copyMoreMenu.style.top = yPosition + "px";
+          // Position more menu on X axis
+          const width = copyMoreMenu.offsetWidth;
+          const xPosition = e.clientX - width - 10;
+          copyMoreMenu.style.left = xPosition + "px";
 
-      // Position more menu on X axis
-      const width = copyMoreMenu.offsetWidth;
-      const xPosition = e.clientX - width - 10;
-      copyMoreMenu.style.left = xPosition + "px";
+          // Make it appear
+          copyMoreMenu.style.animation = "appear 0.2s forwards ease-in-out";
 
-      // Make it appear
-      copyMoreMenu.style.animation = "appear 0.2s forwards ease-in-out";
+          resolve({ node: copyMoreMenu, parent: parent });
+        }
+      });
+    });
+  };
 
+  const setRelatedListeners = function (copyMoreMenu, parent) {
+    return new Promise((resolve) => {
       setListenersTrash(parent);
       setListenersEdit(parent, copyMoreMenu);
 
-      let timeout;
+      // We are setting the listener for the click outside the menu that will make it go away
+      window.addEventListener("mousedown", (e) => {
+        if (!copyMoreMenu.contains(e.target)) {
+          copyMoreMenu.remove();
+        }
+      });
 
-      window.clearTimeout(timeout);
-      timeout = window.setTimeout(() => {
-        window.addEventListener("mousedown", (e) => {
-          if (!copyMoreMenu.contains(e.target)) {
-            console.log("test");
-            copyMoreMenu.remove();
-          }
-        });
-      }, 100);
-    }
-  }
+      resolve(copyMoreMenu);
+    });
+  };
+
+  // We want to set everything only after the apparition of the context menu
+  createListenerDots(node).then((res) =>
+    setRelatedListeners(res.node, res.parent)
+  );
 }
 
 function setListenersTrash(node) {
@@ -538,40 +540,59 @@ function setListenersTrash(node) {
 }
 
 function setListenersEdit(node, moreMenu) {
-  const editBtn = document.querySelector(
-    ".more-menu-template__container__pencil"
-  );
-  editBtn.addEventListener("click", (e) => {
-    const pElement = node.querySelector("p");
-    pElement.setAttribute("contenteditable", true);
-    pElement.focus();
-    const details = node.parentElement;
-    details.addEventListener("click", disableToggle, true);
+  function createListener(node, moreMenu) {
+    return new Promise((resolve) => {
+      const editBtn = document.querySelector(
+        ".more-menu-template__container__pencil"
+      );
+      editBtn.addEventListener("click", () => {
+        const pElement = node.querySelector("p");
 
-    isEditingFinished(pElement, details);
+        pElement.setAttribute("contenteditable", true);
+        pElement.focus();
 
-    moreMenu.remove();
-  });
-}
+        const details = node.parentElement;
+        details.addEventListener("click", disableToggle, true);
 
-function disableToggle(event) {
-  event.preventDefault();
-}
+        moreMenu.remove();
 
-function isEditingFinished(pElement, details) {
-  pElement.addEventListener("keydown", (e) => {
-    if (e.keyCode == 13) {
-      details.removeEventListener("click", disableToggle, true);
-      pElement.setAttribute("contenteditable", false);
-    }
-  });
-
-  setTimeout(() => {
-    window.addEventListener("click", (e) => {
-      if (!pElement.contains(e.target)) {
-        details.removeEventListener("click", disableToggle, true);
-        pElement.setAttribute("contenteditable", false);
-      }
+        resolve({ pElement: pElement, details: details });
+      });
     });
-  }, 100);
+  }
+
+  function setCheckEditEnd(pElement, details) {
+    return new Promise((resolve) => {
+      pElement.addEventListener("keydown", (e) => {
+        if (e.keyCode == 13) {
+          details.removeEventListener("click", disableToggle, true);
+          pElement.setAttribute("contenteditable", false);
+        }
+      });
+
+      window.addEventListener("mousedown", (e) => {
+        if (!pElement.contains(e.target)) {
+          details.removeEventListener("click", disableToggle, true);
+          pElement.setAttribute("contenteditable", false);
+        }
+      });
+      resolve(pElement);
+    });
+  }
+
+  function disableToggle(event) {
+    event.preventDefault();
+  }
+
+  createListener(node, moreMenu).then((res) => {
+    setCheckEditEnd(res.pElement, res.details);
+  });
 }
+
+// Accessing the variable
+// const color = element.style.getPropertyValue("--darkest-color");
+
+// // Modifying the variable
+// element.style.setProperty("--darkest-color", "#e9ecef");
+
+// https://dev.to/ananyaneogi/create-a-dark-light-mode-switch-with-css-variables-34l8
