@@ -49,12 +49,16 @@ function checkInput() {
 }
 
 // Add a task after pressing "Enter"
-newTask.addEventListener("keyup", (e) => {
+newTask.addEventListener("keyup", checkValidInput);
+categoryInput.addEventListener("keyup", checkValidInput);
+urgencyInput.addEventListener("keyup", checkValidInput);
+
+function checkValidInput(e) {
   if (e.keyCode == 13 && newTask.value != "") {
     checkInput();
     addTask(newTask.value, categoryInput.value, urgencyInput.value);
   }
-});
+}
 
 // Add a task after pressing the custom + button
 addTaskBtn.addEventListener("click", () => {
@@ -476,9 +480,9 @@ function setListenersDots(node) {
     const parent = target.parentElement;
     const classTargeted = "task-list-template__details__button";
     const hasClass = target.classList.contains(classTargeted);
+
     if (hasClass) {
       // We need to make it appear before setting its position so we append it with opacity 0 and turn it to 1 once its position is correct
-      // copyMoreMenu.style.opacity = 0;
       parent.appendChild(copyMoreMenu);
 
       const halfHeight = copyMoreMenu.offsetHeight / 2;
@@ -496,19 +500,40 @@ function setListenersDots(node) {
       setListenersTrash(parent);
       setListenersEdit(parent, copyMoreMenu);
 
-      // setTimeout(() => {
-      //   copyMoreMenu.remove();
-      // }, 1000);
+      let timeout;
+
+      window.clearTimeout(timeout);
+      timeout = window.setTimeout(() => {
+        window.addEventListener("mousedown", (e) => {
+          if (!copyMoreMenu.contains(e.target)) {
+            console.log("test");
+            copyMoreMenu.remove();
+          }
+        });
+      }, 100);
     }
   }
 }
 
-function setListenersTrash(node, moreMenu) {
+function setListenersTrash(node) {
   const trashIcon = document.querySelector(
     ".more-menu-template__container__trash"
   );
+
+  const detailsEl = node.parentElement;
+  const classDetailsEl = detailsEl.classList.item(1);
   trashIcon.addEventListener("click", (e) => {
-    node.parentElement.remove();
+    // Delete the category from array
+    if (categoryArray.indexOf(classDetailsEl) != -1) {
+      const indexCat = categoryArray.indexOf(classDetailsEl);
+      categoryArray.splice(indexCat, 1);
+    } else {
+      const indexUrg = urgencyArray.indexOf(classDetailsEl);
+      urgencyArray.splice(indexUrg, 1);
+    }
+
+    // Delete the task group
+    detailsEl.remove();
   });
 }
 
