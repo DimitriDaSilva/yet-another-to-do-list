@@ -453,19 +453,20 @@ function getDragAfterElement(container, y) {
   ).element;
 }
 
-// Set an autosave every 5 minutes just in case the browser crashes
-setTimeout(() => {
-  location = location;
-}, 300000);
-
 function setListenersDots(node) {
+  // Importing the template which is a document fragment
   const moreMenuTemplateNode = document.importNode(
     moreMenuTemplate.content,
     true
   );
-  const copyMoreMenu = moreMenuTemplateNode.querySelector("div");
 
-  const createListenerDots = function (node) {
+  // We need to convert the template into a more convinient format
+  const copyMoreMenu = moreMenuTemplateNode.querySelector(
+    ".more-menu-template__container__buttons"
+  );
+
+  // 1st promise: creating the dots
+  const createDots = function (node) {
     return new Promise((resolve) => {
       node.addEventListener("click", (e) => {
         const target = e.target;
@@ -473,9 +474,15 @@ function setListenersDots(node) {
         const classTargeted = "task-list-template__details__button";
         const hasClass = target.classList.contains(classTargeted);
 
+        const placeholder = parent.querySelector(
+          ".task-list-template__details__more-menu"
+        );
+
         if (hasClass) {
-          // We need to make it appear before setting its position so we append it with opacity 0 and turn it to 1 once its position is correct
-          parent.appendChild(copyMoreMenu);
+          // We need to make it appear so that we can take its measures
+          // We then set its position
+          // We append it with opacity 0 and turn it to 1
+          placeholder.appendChild(copyMoreMenu);
 
           const halfHeight = copyMoreMenu.offsetHeight / 2;
           const yPosition = e.clientY - halfHeight;
@@ -489,35 +496,157 @@ function setListenersDots(node) {
           // Make it appear
           copyMoreMenu.style.animation = "appear 0.2s forwards ease-in-out";
 
-          resolve({ node: copyMoreMenu, parent: parent });
+          resolve({
+            node: copyMoreMenu,
+            parent: parent,
+            xPosition: xPosition,
+            yPosition: yPosition + copyMoreMenu.offsetHeight,
+            placeholder: placeholder,
+          });
         }
       });
     });
   };
 
-  const setRelatedListeners = function (copyMoreMenu, parent) {
+  const setRelatedListeners = function (
+    copyMoreMenu,
+    parent,
+    xPosition,
+    yPosition,
+    placeholder
+  ) {
     return new Promise((resolve) => {
-      setListenersTrash(parent);
-      setListenersEdit(parent, copyMoreMenu);
+      // Listening to each icon
+      setListenerBrush(parent, xPosition, yPosition);
+      console.log("test");
+      console.log(parent);
+
+      setListenerEdit(parent, copyMoreMenu);
+      setListenerTrash(parent);
+      setListenersCrosses;
 
       // We are setting the listener for the click outside the menu that will make it go away
-      window.addEventListener("mousedown", (e) => {
-        if (!copyMoreMenu.contains(e.target)) {
-          copyMoreMenu.remove();
+      window.addEventListener("mousedown", setListenerExitMoreMenu, true);
+      function setListenerExitMoreMenu(e) {
+        if (!placeholder.contains(e.target)) {
+          placeholder.textContent = "";
         }
-      });
+      }
 
       resolve(copyMoreMenu);
     });
   };
 
   // We want to set everything only after the apparition of the context menu
-  createListenerDots(node).then((res) =>
-    setRelatedListeners(res.node, res.parent)
+  createDots(node).then((res) =>
+    setRelatedListeners(
+      res.node,
+      res.parent,
+      res.xPosition,
+      res.yPosition,
+      res.placeholder
+    )
   );
 }
 
-function setListenersTrash(node) {
+// Set the colors of the color palette
+const colorPaletteTemplateNode = document.importNode(
+  moreMenuTemplate.content,
+  true
+);
+const colorPalette = colorPaletteTemplateNode.querySelector(
+  ".more-menu-template__container__colors"
+);
+const colors = colorPalette.querySelectorAll("button");
+
+// Get color from CSS variable
+const root = getComputedStyle(document.documentElement);
+const darkestColor = root.getPropertyValue("--darkest-color");
+
+const presetColors = [
+  { color: darkestColor, used: false },
+  { color: "#e63946", used: false },
+  { color: "#2a9d8f", used: false },
+  { color: "#f4a261", used: false },
+  { color: "#a8dadc", used: false },
+  { color: "#ffb4a2", used: false },
+  { color: "#a5a58d", used: false },
+  { color: "#f2cc8f", used: false },
+  { color: "#ef476f", used: false },
+  { color: "#fee440", used: false },
+];
+let index = 0;
+
+colors.forEach((color) => {
+  color.style.background = presetColors[index].color;
+  index++;
+});
+// console.log(colorPalette);
+// console.log(colors);
+
+function setListenerBrush(parent, xPosition, yPosition) {
+  const brushIcon = document.querySelector(
+    ".more-menu-template__container__color"
+  );
+
+  // Set the listener over the brush click
+  brushIcon.addEventListener("click", () => {
+    // Position palette on X and Y axis
+    colorPalette.style.left = xPosition + "px";
+    colorPalette.style.top = yPosition - 7 + "px";
+
+    // Get existing color from the bottom border
+    const borderStyle = window.getComputedStyle(parent);
+    const borderColor = borderStyle.getPropertyValue("border-bottom-color");
+
+    // Format the rectangle that represents the current color
+    colors.forEach((color) => {
+      rgbColor = color.style.background;
+      hexColor = rgbToHex(rgbColor);
+      if (hexColor == borderColor) {
+        color.style.boxShadow = `0 0 0 3px ${hexColor}44`;
+      }
+    });
+
+    const placeholder = parent.querySelector(
+      ".task-list-template__details__more-menu"
+    );
+    placeholder.appendChild(colorPalette);
+
+    // Make it appear
+    colorPalette.style.animation = "appearColor 0.4s forwards ease-in-out";
+
+    setListenerColors(colorPalette);
+  });
+
+  // Set the listener over each color
+  function setListenerColors(colorPalette) {
+    colorPalette.addEventListener("click", (e) => {
+      const target = e.target;
+      const classTargeted = "more-menu-template__container__colors__btn";
+      const hasClass = target.classList.contains(classTargeted);
+      if (hasClass) {
+        const pickedColor = target.style.background;
+
+        // Set the stroke with the new color
+        console.log(parent);
+        parent.style.setProperty("border-bottom-color", pickedColor);
+
+        // Set the checkboxed with the new color
+        const details = parent.parentElement;
+        const ul = details.querySelector("ul");
+        const checkboxes = ul.querySelectorAll(
+          ".task-template__item__custom-checkbox"
+        );
+        checkboxes.forEach((checkbox) => {
+          checkbox.style.setProperty("background", pickedColor);
+        });
+      }
+    });
+  }
+}
+
+function setListenerTrash(node) {
   const trashIcon = document.querySelector(
     ".more-menu-template__container__trash"
   );
@@ -539,7 +668,7 @@ function setListenersTrash(node) {
   });
 }
 
-function setListenersEdit(node, moreMenu) {
+function setListenerEdit(node, moreMenu) {
   function createListener(node, moreMenu) {
     return new Promise((resolve) => {
       const editBtn = document.querySelector(
@@ -596,3 +725,20 @@ function setListenersEdit(node, moreMenu) {
 // element.style.setProperty("--darkest-color", "#e9ecef");
 
 // https://dev.to/ananyaneogi/create-a-dark-light-mode-switch-with-css-variables-34l8
+
+function rgbToHex(rgb) {
+  rgb = rgb.toString();
+  let a = rgb.split("(")[1].split(")")[0];
+
+  a = a.split(",");
+
+  let b = a.map(function (x) {
+    //For each array element
+    x = parseInt(x).toString(16); //Convert to a base16 string
+    return x.length == 1 ? "0" + x : x; //Add zero if we get only one character
+  });
+
+  b = "#" + b.join("");
+
+  return b;
+}

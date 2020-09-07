@@ -13,7 +13,7 @@
   <body>
     <header>
       <div id="top-section">
-        <div id="top-section__date">4th September 2020</div>
+        <div id="top-section__date">7th September 2020</div>
         <div id="top-section__icons">
           <div id="top-section__dark-mode" draggable="true">
             <img src="./img/moon.svg" />
@@ -82,6 +82,7 @@
           <button class="task-list-template__details__button">
             <span class="task-list-template__details__dots">&#8411;</span>
           </button>
+          <div class="task-list-template__details__more-menu"></div>
         </summary>
         <ul class="task-list-template__details__list"></ul>
       </details>
@@ -111,16 +112,33 @@
     </template>
     <template id="more-menu-template">
       <div class="more-menu-template__container">
-        <button class="more-menu-template__container__color">
-          <img src="./img/paint-brush.svg" alt="paint-brush" />
-        </button>
-        <button class="more-menu-template__container__pencil">
-          <img src="./img/pencil.svg" alt="pencil" />
-        </button>
-        <button class="more-menu-template__container__trash">
-          <img src="./img/trash-can.svg" alt="trash-can" />
-        </button>
+        <div class="more-menu-template__container__buttons">
+          <button class="more-menu-template__container__color">
+            <img src="./img/paint-brush.svg" alt="paint-brush" />
+          </button>
+          <button class="more-menu-template__container__pencil">
+            <img src="./img/pencil.svg" alt="pencil" />
+          </button>
+          <button class="more-menu-template__container__trash">
+            <img src="./img/trash-can.svg" alt="trash-can" />
+          </button>
+        </div>
+        <div class="more-menu-template__container__colors">
+          <button class="more-menu-template__container__colors__btn"></button>
+          <button class="more-menu-template__container__colors__btn"></button>
+          <button class="more-menu-template__container__colors__btn"></button>
+          <button class="more-menu-template__container__colors__btn"></button>
+          <button class="more-menu-template__container__colors__btn"></button>
+          <button class="more-menu-template__container__colors__btn"></button>
+          <button class="more-menu-template__container__colors__btn"></button>
+          <button class="more-menu-template__container__colors__btn"></button>
+          <button class="more-menu-template__container__colors__btn"></button>
+          <button class="more-menu-template__container__colors__btn"></button>
+        </div>
       </div>
+    </template>
+    <template id="color-palette">
+      <div class="color-palette__container"></div>
     </template>
     <script src="./js/main.js"></script>
     <script src="./js/accessibility.js"></script>

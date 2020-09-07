@@ -41,17 +41,23 @@ header {
   margin-bottom: 0.7rem;
 }
 
+#top-section__date {
+  color: var(--dark-color);
+}
+
 #top-section__icons {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-#top-section__reload,
+#top-section__reload img,
 #top-section__dark-mode img {
   width: 1.2rem;
   cursor: pointer;
   margin-left: 0.8rem;
+  filter: invert(23%) sepia(0%) saturate(0%) hue-rotate(144deg) brightness(104%)
+    contrast(89%);
 }
 
 main {
@@ -229,14 +235,12 @@ summary {
   cursor: pointer;
   display: flex;
   align-items: center;
-  border-bottom: 1px var(--light-ish-color) solid;
+  border-bottom: 1px var(--darkest-color) solid;
   padding-bottom: 0.4rem;
 }
 
 summary::-webkit-details-marker {
-  color: var(--darkest-color);
-  width: 1rem;
-  height: 1rem;
+  color: var(--dark-color);
 }
 
 .task-list-template__details__title {
@@ -279,7 +283,7 @@ summary::-webkit-details-marker {
   cursor: pointer;
 }
 
-.more-menu-template__container {
+.more-menu-template__container__buttons {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -288,8 +292,9 @@ summary::-webkit-details-marker {
   border-radius: 4px;
   background: var(--light-color);
   padding: 0.4rem;
-  box-shadow: 5px 5px 20px var(--light-ish-color);
+  box-shadow: 2px 2px 5px var(--light-ish-color);
   position: absolute;
+  z-index: 3;
 }
 
 @keyframes appear {
@@ -303,15 +308,48 @@ summary::-webkit-details-marker {
   }
 }
 
-.more-menu-template__container button {
+.more-menu-template__container__buttons button {
   background: none;
   border: none;
 }
 
-.more-menu-template__container img {
+.more-menu-template__container__buttons button img {
   width: 25px;
   filter: invert(3%) sepia(94%) saturate(7349%) hue-rotate(246deg)
     brightness(102%) contrast(95%);
+  cursor: pointer;
+}
+
+.more-menu-template__container__colors {
+  width: 150px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: center;
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px;
+  background: var(--light-color);
+  padding: 1rem 0.4rem 0.4rem;
+  box-shadow: 2px 2px 5px var(--light-ish-color);
+  position: absolute;
+  z-index: 2;
+}
+
+@keyframes appearColor {
+  0% {
+    transform: translateY(-2.5rem);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.more-menu-template__container__colors__btn {
+  width: 20px;
+  height: 20px;
+  border: none;
+  margin: 0.2rem;
+  border-radius: 50%;
   cursor: pointer;
 }
 
