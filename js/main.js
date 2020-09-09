@@ -36,6 +36,18 @@ filterBtn.addEventListener("click", () => {
     filterMode = filters[0];
     filterBtn.textContent = "Filter by urgency";
   }
+
+  const savedData = saveData();
+  console.log(savedData);
+
+  tasksContainer.textContent = "";
+  categoryArray = [];
+  urgencyArray = [];
+
+  savedData.forEach((item) => {
+    console.log(item);
+    addTask(item.task, item.category, item.urgency, item.color, item.checked);
+  });
 });
 
 // Give default value to categoryInput and urgencyInput if they are left empty
@@ -69,35 +81,20 @@ addTaskBtn.addEventListener("click", () => {
 });
 
 // Add a task with DOM manipulation
-function addTask(taskString, category, urgency, taskCheck = false) {
-  // Filling the task template
-  const taskTemplateNode = document.importNode(taskTemplate.content, true);
-  const copyTaskNode = taskTemplateNode.querySelector("li");
-  const checkbox = taskTemplateNode.querySelector("input");
-  const label = taskTemplateNode.querySelector("label");
-  const cross = taskTemplateNode.querySelectorAll(
-    ".task-template__item__cross"
-  );
-
-  cross[0].id = id;
-  checkbox.id = id;
-  label.htmlFor = id;
-
-  copyTaskNode.classList.add(category);
-  copyTaskNode.classList.add(urgency);
-
-  addOptionToDatalist(category, "category");
-  addOptionToDatalist(urgency, "urgency");
-
-  const pElement = taskTemplateNode.querySelector("p");
-  pElement.append(taskString);
-
+function addTask(
+  taskString,
+  category,
+  urgency,
+  pickedColor = setRandColor(),
+  taskCheck = false
+) {
   // Based on the filterMode, filling the new list if needed
   const taskListTemplateNode = document.importNode(
     taskListTemplate.content,
     true
   );
   const copyListNode = taskListTemplateNode.querySelector("details");
+  const summary = taskListTemplateNode.querySelector("summary");
 
   // Check if category exists already
   // If not, create it and append it to tasksContainer
@@ -114,6 +111,13 @@ function addTask(taskString, category, urgency, taskCheck = false) {
 
     // Add category and urgency to the class of the parentNode
     copyListNode.classList.add(category);
+
+    // Set the colors to the stroke
+    setColors(summary, pickedColor);
+
+    // Asign the pickedColor to the category as a class
+    copyListNode.classList.add(pickedColor);
+    changeColorStatus(null, pickedColor);
 
     tasksContainer.append(copyListNode);
 
@@ -137,12 +141,44 @@ function addTask(taskString, category, urgency, taskCheck = false) {
     // Add category and urgency to the class of the parentNode
     copyListNode.classList.add(urgency);
 
+    // Set the colors to the stroke
+    setColors(summary, pickedColor);
+
+    // Asign the pickedColor to the category as a class
+    copyListNode.classList.add(pickedColor);
+    changeColorStatus(null, pickedColor);
+
     tasksContainer.append(copyListNode);
 
     setListenersDots(copyListNode);
   }
 
+  // Filling the task template
+
+  // Selecting the task template elements
+  const taskTemplateNode = document.importNode(taskTemplate.content, true);
+  const copyTaskNode = taskTemplateNode.querySelector("li");
+  const checkbox = taskTemplateNode.querySelector("input");
+  const label = taskTemplateNode.querySelector("label");
+  const tag = taskTemplateNode.querySelector(".task-template__item__tag");
+  const cross = taskTemplateNode.querySelector(".task-template__item__cross");
+
+  // Selecting the existing categories
   const allDetails = tasksContainer.querySelectorAll("details");
+
+  cross.id = id;
+  checkbox.id = id;
+  label.htmlFor = id;
+
+  copyTaskNode.classList.add(category);
+  copyTaskNode.classList.add(urgency);
+
+  addOptionToDatalist(category, "category");
+  addOptionToDatalist(urgency, "urgency");
+
+  const pElement = taskTemplateNode.querySelector("p");
+  pElement.append(taskString);
+
   // Appending the task in the right category
   if (filterMode == filters[0]) {
     allDetails.forEach((list) => {
@@ -153,6 +189,13 @@ function addTask(taskString, category, urgency, taskCheck = false) {
         if (list.open != true) {
           list.open = true;
         }
+
+        // Add tag
+        tag.textContent = urgency;
+
+        // Detect stroke color and apply it to the task
+        const summaryEl = list.querySelector("summary");
+        setColors(summaryEl, getBottomBorderColor(summaryEl));
       }
     });
   } else {
@@ -164,6 +207,13 @@ function addTask(taskString, category, urgency, taskCheck = false) {
         if (list.open != true) {
           list.open = true;
         }
+
+        // Add tag
+        tag.textContent = category;
+
+        // Detect stroke color and apply it to the task
+        const summaryEl = list.querySelector("summary");
+        setColors(summaryEl, getBottomBorderColor(summaryEl));
       }
     });
   }
@@ -220,11 +270,8 @@ function addOptionToDatalist(userInput, type) {
   }
 }
 
-// Before closing the tab, load the info on the localStorage
-window.addEventListener("beforeunload", () => {
-  // Clear previous cache
-  localStorage.clear();
-
+// Save everything
+function saveData() {
   // Set the array where we'll store the objects with task info
   const tasksArray = [];
 
@@ -245,18 +292,32 @@ window.addEventListener("beforeunload", () => {
     // Get urgency
     const urgency = liElements[i].classList.item(2);
 
+    // Get color from box
+    const checkboxColor = getCheckboxColor(liElements[i]);
+
     // Put each task in an object and store them in an array
     const allItems = {
       checked: checkedItem,
       task: taskItem,
       category: category,
       urgency: urgency,
+      color: checkboxColor,
     };
 
     tasksArray.push(allItems);
   }
 
-  localStorage.setItem("tasks", JSON.stringify(tasksArray));
+  return tasksArray;
+}
+
+// Before closing the tab, load the info on the localStorage
+window.addEventListener("beforeunload", () => {
+  // Clear previous cache
+  localStorage.clear();
+
+  const savedData = saveData();
+
+  localStorage.setItem("tasks", JSON.stringify(savedData));
   localStorage.setItem("filterMode", filterMode);
   // localStorage.clear();
 });
@@ -274,10 +335,11 @@ window.addEventListener("load", () => {
     filterBtn.textContent = "Filter by category";
   }
 
+  // Adding all the tasks
   if (localStorage.getItem("tasks") != null) {
     const data = JSON.parse(localStorage.getItem("tasks"));
     data.forEach((item) => {
-      addTask(item.task, item.category, item.urgency, item.checked);
+      addTask(item.task, item.category, item.urgency, item.color, item.checked);
     });
   }
 
@@ -354,6 +416,7 @@ function makeElementsDraggable() {
 
     task.addEventListener("touchend", () => {
       clearTimeout(touchTimeout);
+      updateTask(task);
       task.draggable = false;
       document.body.classList.remove("stop-scroll");
       task.classList.remove("task-template__item--dragging");
@@ -372,11 +435,36 @@ function makeElementsDraggable() {
     });
 
     task.addEventListener("dragend", () => {
+      updateTask(task);
       task.classList.remove("task-template__item--dragging");
       dragLogo.classList.remove("task-template__item--ongoing-drag");
       task.draggable = false;
     });
   });
+}
+
+// MOdify the category of the task upon drop and change its color
+function updateTask(task) {
+  const detailsEl = getParentElement(task, "DETAILS");
+
+  // Modify its category
+  const groupName = detailsEl.classList.item(1);
+  let classToBeReplaced = "";
+
+  if (filterMode == filters[0]) {
+    classToBeReplaced = task.classList.item(1);
+  } else {
+    classToBeReplaced = task.classList.item(2);
+  }
+
+  task.classList.replace(classToBeReplaced, groupName);
+
+  // Update the color
+  const strokeColor = detailsEl.classList.item(2);
+  const checkboxEl = task.querySelector(
+    ".task-template__item__custom-checkbox"
+  );
+  checkboxEl.style.background = strokeColor;
 }
 
 // For touch-based devices
@@ -418,7 +506,6 @@ tasksContainer.addEventListener("dragover", (e) => {
 });
 
 function getParentElement(object, tag) {
-  console.log(object);
   if (object.tagName == tag) {
     return object;
   }
@@ -465,88 +552,62 @@ function setListenersDots(node) {
     ".more-menu-template__container__buttons"
   );
 
-  // 1st promise: creating the dots
-  const createDots = function (node) {
-    return new Promise((resolve) => {
-      node.addEventListener("click", (e) => {
-        const target = e.target;
-        const parent = target.parentElement;
-        const classTargeted = "task-list-template__details__button";
-        const hasClass = target.classList.contains(classTargeted);
+  // Creating the more menu after click on dots
+  node.addEventListener("click", (e) => {
+    const dotBtn = e.target;
+    const summaryEl = dotBtn.parentElement;
+    const classTargeted = "task-list-template__details__button";
+    const hasClass = dotBtn.classList.contains(classTargeted);
 
-        const placeholder = parent.querySelector(
-          ".task-list-template__details__more-menu"
-        );
+    const placeholder = summaryEl.querySelector(
+      ".task-list-template__details__more-menu"
+    );
 
-        if (hasClass) {
-          // We need to make it appear so that we can take its measures
-          // We then set its position
-          // We append it with opacity 0 and turn it to 1
-          placeholder.appendChild(copyMoreMenu);
+    if (hasClass) {
+      // We need to make it appear so that we can take its measures
+      // We then set its position
+      // We append it with opacity 0 and turn it to 1
+      placeholder.appendChild(copyMoreMenu);
 
-          const halfHeight = copyMoreMenu.offsetHeight / 2;
-          const yPosition = e.clientY - halfHeight;
-          copyMoreMenu.style.top = yPosition + "px";
+      const halfHeight = copyMoreMenu.offsetHeight / 2;
+      const yPosition = e.clientY - halfHeight;
+      copyMoreMenu.style.top = yPosition + "px";
 
-          // Position more menu on X axis
-          const width = copyMoreMenu.offsetWidth;
-          const xPosition = e.clientX - width - 10;
-          copyMoreMenu.style.left = xPosition + "px";
+      // Position more menu on X axis
+      const width = copyMoreMenu.offsetWidth;
+      const xPosition = e.clientX - width - 10;
+      copyMoreMenu.style.left = xPosition + "px";
 
-          // Make it appear
-          copyMoreMenu.style.animation = "appear 0.2s forwards ease-in-out";
+      // Make it appear
+      copyMoreMenu.style.animation = "appear 0.2s forwards ease-in-out";
 
-          resolve({
-            node: copyMoreMenu,
-            parent: parent,
-            xPosition: xPosition,
-            yPosition: yPosition + copyMoreMenu.offsetHeight,
-            placeholder: placeholder,
-          });
-        }
-      });
-    });
-  };
-
-  const setRelatedListeners = function (
-    copyMoreMenu,
-    parent,
-    xPosition,
-    yPosition,
-    placeholder
-  ) {
-    return new Promise((resolve) => {
       // Listening to each icon
-      setListenerBrush(parent, xPosition, yPosition);
-      console.log("test");
-      console.log(parent);
+      // We need to pass down a yPosition adjusted for the height of the contrainer
+      const adjYPosition = yPosition + copyMoreMenu.offsetHeight;
+      setListenerBrush(summaryEl, xPosition, adjYPosition);
 
-      setListenerEdit(parent, copyMoreMenu);
-      setListenerTrash(parent);
-      setListenersCrosses;
+      setListenerEdit(summaryEl, copyMoreMenu);
+
+      setListenerTrash(summaryEl);
 
       // We are setting the listener for the click outside the menu that will make it go away
       window.addEventListener("mousedown", setListenerExitMoreMenu, true);
       function setListenerExitMoreMenu(e) {
         if (!placeholder.contains(e.target)) {
+          // Removing the event listeners of the color buttons, otherwise they stack each other
+          if (placeholder.childElementCount == 2) {
+            colorPalette.removeEventListener(
+              "click",
+              colorListenerHandler,
+              true
+            );
+          }
+
           placeholder.textContent = "";
         }
       }
-
-      resolve(copyMoreMenu);
-    });
-  };
-
-  // We want to set everything only after the apparition of the context menu
-  createDots(node).then((res) =>
-    setRelatedListeners(
-      res.node,
-      res.parent,
-      res.xPosition,
-      res.yPosition,
-      res.placeholder
-    )
-  );
+    }
+  });
 }
 
 // Set the colors of the color palette
@@ -559,12 +620,8 @@ const colorPalette = colorPaletteTemplateNode.querySelector(
 );
 const colors = colorPalette.querySelectorAll("button");
 
-// Get color from CSS variable
-const root = getComputedStyle(document.documentElement);
-const darkestColor = root.getPropertyValue("--darkest-color");
-
 const presetColors = [
-  { color: darkestColor, used: false },
+  { color: "#111455", used: false },
   { color: "#e63946", used: false },
   { color: "#2a9d8f", used: false },
   { color: "#f4a261", used: false },
@@ -581,10 +638,32 @@ colors.forEach((color) => {
   color.style.background = presetColors[index].color;
   index++;
 });
-// console.log(colorPalette);
-// console.log(colors);
 
-function setListenerBrush(parent, xPosition, yPosition) {
+function setRandColor() {
+  const numbColors = presetColors.length;
+  let isUsed;
+  let randIndex;
+
+  // Use case where there are more than 10 categories being used, we reset the used properties
+  if (presetColors.filter((color) => color.used == true).length == numbColors) {
+    presetColors.forEach((color) => {
+      color.used = false;
+    });
+  }
+
+  // We check pick a color at random and check if the color is currently being used
+  do {
+    randIndex = Math.floor(Math.random() * numbColors);
+
+    isUsed = presetColors[randIndex].used;
+  } while (isUsed);
+
+  presetColors[randIndex].used = true;
+
+  return presetColors[randIndex].color;
+}
+
+function setListenerBrush(summaryEl, xPosition, yPosition) {
   const brushIcon = document.querySelector(
     ".more-menu-template__container__color"
   );
@@ -596,19 +675,14 @@ function setListenerBrush(parent, xPosition, yPosition) {
     colorPalette.style.top = yPosition - 7 + "px";
 
     // Get existing color from the bottom border
-    const borderStyle = window.getComputedStyle(parent);
-    const borderColor = borderStyle.getPropertyValue("border-bottom-color");
+    const borderColor = getBottomBorderColor(summaryEl);
+    // const borderStyle = window.getComputedStyle(parent);
+    // const borderColor = borderStyle.getPropertyValue("border-bottom-color");
 
-    // Format the rectangle that represents the current color
-    colors.forEach((color) => {
-      rgbColor = color.style.background;
-      hexColor = rgbToHex(rgbColor);
-      if (hexColor == borderColor) {
-        color.style.boxShadow = `0 0 0 3px ${hexColor}44`;
-      }
-    });
+    // Format the circle that represents the current color
+    formatColorCircle(borderColor);
 
-    const placeholder = parent.querySelector(
+    const placeholder = summaryEl.querySelector(
       ".task-list-template__details__more-menu"
     );
     placeholder.appendChild(colorPalette);
@@ -616,42 +690,98 @@ function setListenerBrush(parent, xPosition, yPosition) {
     // Make it appear
     colorPalette.style.animation = "appearColor 0.4s forwards ease-in-out";
 
-    setListenerColors(colorPalette);
+    setListenerColors(summaryEl);
   });
+}
 
-  // Set the listener over each color
-  function setListenerColors(colorPalette) {
-    colorPalette.addEventListener("click", (e) => {
-      const target = e.target;
-      const classTargeted = "more-menu-template__container__colors__btn";
-      const hasClass = target.classList.contains(classTargeted);
-      if (hasClass) {
-        const pickedColor = target.style.background;
+function formatColorCircle(borderColor) {
+  colors.forEach((color) => {
+    color.style.boxShadow = "none";
+    const rgbColor = color.style.background;
+    const hexColor = rgbToHex(rgbColor);
+    if (rgbColor == borderColor) {
+      color.style.boxShadow = `0 0 0 3px ${hexColor}44`;
+    }
+  });
+}
 
-        // Set the stroke with the new color
-        console.log(parent);
-        parent.style.setProperty("border-bottom-color", pickedColor);
+function getBottomBorderColor(summaryEl) {
+  const borderStyle = window.getComputedStyle(summaryEl);
+  return borderStyle.getPropertyValue("border-bottom-color");
+}
 
-        // Set the checkboxed with the new color
-        const details = parent.parentElement;
-        const ul = details.querySelector("ul");
-        const checkboxes = ul.querySelectorAll(
-          ".task-template__item__custom-checkbox"
-        );
-        checkboxes.forEach((checkbox) => {
-          checkbox.style.setProperty("background", pickedColor);
-        });
-      }
-    });
+function getCheckboxColor(liEl) {
+  const checkbox = liEl.querySelector(".task-template__item__custom-checkbox");
+  const checkboxStyle = window.getComputedStyle(checkbox);
+  return rgbToHex(checkboxStyle.getPropertyValue("background-color"));
+}
+
+// Set the listener over each color
+function setListenerColors(summaryEl) {
+  colorPalette.addEventListener("click", colorListenerHandler, true);
+}
+
+function colorListenerHandler(e) {
+  const target = e.target;
+  const classTargeted = "more-menu-template__container__colors__btn";
+  const hasClass = target.classList.contains(classTargeted);
+  if (hasClass) {
+    const summaryEl = getParentElement(target, "SUMMARY");
+    const pickedColor = target.style.background;
+
+    changeColorStatus(summaryEl, pickedColor);
+
+    formatColorCircle(pickedColor);
+
+    setColors(summaryEl, pickedColor);
   }
 }
 
-function setListenerTrash(node) {
+// Use the default value for when we only want to delete and category and no longer use a color
+function changeColorStatus(summaryEl = null, pickedColor = null) {
+  let detailsEl, oldColor, rgbPickedColor;
+  if (summaryEl != null) {
+    detailsEl = summaryEl.parentElement;
+    oldColor = detailsEl.classList.item(2);
+  }
+
+  if (/^#/.test(pickedColor)) {
+    rgbPickedColor = pickedColor;
+  } else if (pickedColor != null) {
+    rgbPickedColor = rgbToHex(pickedColor);
+    detailsEl.classList.replace(oldColor, rgbPickedColor);
+  }
+
+  presetColors.forEach((color) => {
+    if (color.color == oldColor) {
+      color.used = false;
+    } else if (color.color == rgbPickedColor) {
+      color.used = true;
+    }
+  });
+}
+
+function setColors(summaryNode, pickedColor) {
+  // Set the stroke with the new color
+  summaryNode.style.setProperty("border-bottom-color", pickedColor);
+
+  // Set the checkboxed with the new color
+  const details = summaryNode.parentElement;
+  const ul = details.querySelector("ul");
+  const checkboxes = ul.querySelectorAll(
+    ".task-template__item__custom-checkbox"
+  );
+  checkboxes.forEach((checkbox) => {
+    checkbox.style.setProperty("background", pickedColor);
+  });
+}
+
+function setListenerTrash(summaryEl) {
   const trashIcon = document.querySelector(
     ".more-menu-template__container__trash"
   );
 
-  const detailsEl = node.parentElement;
+  const detailsEl = summaryEl.parentElement;
   const classDetailsEl = detailsEl.classList.item(1);
   trashIcon.addEventListener("click", (e) => {
     // Delete the category from array
@@ -662,6 +792,9 @@ function setListenerTrash(node) {
       const indexUrg = urgencyArray.indexOf(classDetailsEl);
       urgencyArray.splice(indexUrg, 1);
     }
+
+    // Pass the color used as not used
+    changeColorStatus(summaryEl);
 
     // Delete the task group
     detailsEl.remove();
@@ -683,7 +816,7 @@ function setListenerEdit(node, moreMenu) {
         const details = node.parentElement;
         details.addEventListener("click", disableToggle, true);
 
-        moreMenu.remove();
+        moreMenu.parentElement.remove();
 
         resolve({ pElement: pElement, details: details });
       });

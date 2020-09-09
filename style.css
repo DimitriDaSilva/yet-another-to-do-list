@@ -96,16 +96,16 @@ main {
 
 ::-moz-selection {
   color: var(--lightest-color);
-  background: var(--darkest-color);
+  background: var(--dark-color);
 }
 
 ::selection {
   color: var(--lightest-color);
-  background: var(--darkest-color);
+  background: var(--dark-color);
 }
 
 #add-new-task__button {
-  border: 0.5px var(--darkest-color) solid;
+  border: 0.5px var(--dark-color) solid;
   border-radius: 4px;
   justify-self: stretch;
   padding: 0;
@@ -121,7 +121,7 @@ main {
 
 @media (hover: hover) {
   #add-new-task__button:hover {
-    background: var(--darkest-color);
+    background: var(--dark-color);
     color: var(--lightest-color);
   }
 }
@@ -180,10 +180,10 @@ main {
 
 @media (hover: hover) {
   #buttons__clear:hover {
-    color: var(--darkest-color);
+    color: var(--dark-color);
   }
   #buttons__filter:hover {
-    color: var(--darkest-color);
+    color: var(--dark-color);
   }
 }
 
@@ -204,8 +204,8 @@ main {
 @media (hover: hover) {
   #buttons__clear:hover::before,
   #buttons__filter:hover::before {
-    filter: invert(3%) sepia(94%) saturate(7349%) hue-rotate(246deg)
-      brightness(102%) contrast(95%);
+    filter: invert(23%) sepia(0%) saturate(0%) hue-rotate(144deg)
+      brightness(104%) contrast(89%);
   }
 }
 
@@ -235,7 +235,7 @@ summary {
   cursor: pointer;
   display: flex;
   align-items: center;
-  border-bottom: 1px var(--darkest-color) solid;
+  border-bottom: 1px var(--dark-color) solid;
   padding-bottom: 0.4rem;
 }
 
@@ -267,11 +267,11 @@ summary::-webkit-details-marker {
 }
 
 .task-list-template__details__dots {
-  font-size: 40px;
+  font-size: 30px;
   text-align: center;
   width: 30px;
   height: 20px;
-  line-height: 45px;
+  line-height: 37px;
   color: var(--light-ish-color);
 }
 
@@ -315,8 +315,8 @@ summary::-webkit-details-marker {
 
 .more-menu-template__container__buttons button img {
   width: 25px;
-  filter: invert(3%) sepia(94%) saturate(7349%) hue-rotate(246deg)
-    brightness(102%) contrast(95%);
+  filter: invert(23%) sepia(0%) saturate(0%) hue-rotate(144deg) brightness(104%)
+    contrast(89%);
   cursor: pointer;
 }
 
@@ -412,7 +412,7 @@ ul label svg {
   border-radius: 3px;
   position: relative;
   left: 0.1rem;
-  background: var(--darkest-color);
+  background: var(--dark-color);
 }
 
 .task-template__item__svg {
@@ -447,6 +447,16 @@ ul label svg {
   margin: 0.7rem 0 0.7rem 1rem;
   color: var(--dark-color);
   flex: 1;
+}
+
+.task-template__item__tag {
+  font-size: smaller;
+  margin-right: 0.6rem;
+  padding: 0.2rem;
+  color: var(--light-ish-color);
+  background: var(--light-color);
+  border-radius: 3px;
+  border: 0.1px solid var(--light-ish-color);
 }
 
 .task-template__item__cross {
