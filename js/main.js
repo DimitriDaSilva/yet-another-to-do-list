@@ -851,8 +851,8 @@ function setListenerEdit(node, moreMenu) {
   });
 }
 
-// Accessing the variable
 // const color = element.style.getPropertyValue("--darkest-color");
+// Accessing the variable
 
 // // Modifying the variable
 // element.style.setProperty("--darkest-color", "#e9ecef");
