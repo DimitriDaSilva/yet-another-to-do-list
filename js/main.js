@@ -332,7 +332,6 @@ window.addEventListener("load", () => {
   // Setting the previously set background image
   const backgroundImage = localStorage.getItem("backgroundImage");
   const header = document.querySelector("header");
-  console.log(backgroundImage);
   header.style.backgroundImage = backgroundImage;
 
   // Setting the last filterMode used
