@@ -9,17 +9,19 @@
     <title>Another to-do list</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="./img/logo.png" />
+    <script src="./js/main.js" type="module"></script>
+    <script src="./js/accessibility.js"></script>
   </head>
   <body>
     <header>
       <div id="top-section">
         <div id="top-section__date">9th September 2020</div>
         <div id="top-section__icons">
-          <div id="top-section__dark-mode" draggable="true">
+          <div id="top-section__dark-mode">
             <img src="./img/moon.svg" />
           </div>
-          <div id="top-section__reload">
-            <img src="./img/refresh.svg" />
+          <div id="top-section__background">
+            <img src="./img/picture.svg" />
           </div>
         </div>
       </div>
@@ -138,10 +140,23 @@
         </div>
       </div>
     </template>
-    <template id="color-palette">
-      <div class="color-palette__container"></div>
+    <template id="background-image">
+      <div class="background-image__container">
+        <div class="background-image__container__search-bar">
+          <input type="text" placeholder="Search for an image" />
+        </div>
+        <div class="background-image__container__images">
+          <!-- <div class="background-image__container__images__img"></div> -->
+        </div>
+        <div class="background-image__container__credit">
+          <p class="background-image__container__credit__text">powered by</p>
+          <img
+            src="./img/unsplash-logo.png"
+            alt="unsplash-logo"
+            class="background-image__container__credit__logo"
+          />
+        </div>
+      </div>
     </template>
-    <script src="./js/main.js"></script>
-    <script src="./js/accessibility.js"></script>
   </body>
 </html>

@@ -1,11 +1,12 @@
-"use strick";
+import unsplashApiKey from "./apiKeys.js";
+("use strick");
 
 // Select buttons
 const addTaskBtn = document.querySelector("#add-new-task__button");
 const clearCompletedBtn = document.querySelector("#buttons__clear");
 const filterBtn = document.querySelector("#buttons__filter");
 const darkModeBtn = document.querySelector("#top-section__dark-mode");
-const reloadBackgroundBtn = document.querySelector("#top-section__reload");
+const backgroundBtn = document.querySelector("#top-section__background");
 
 // Select input value
 const newTask = document.querySelector("#add-new-task__input");
@@ -17,6 +18,7 @@ const tasksContainer = document.querySelector("#tasks");
 const taskListTemplate = document.querySelector("#task-list-template");
 const taskTemplate = document.querySelector("#task-template");
 const moreMenuTemplate = document.querySelector("#more-menu-template");
+const backgroundPickerTemplate = document.querySelector("#background-image");
 
 // Set the arrays with the categories and levels of urgency
 let categoryArray = [];
@@ -37,15 +39,13 @@ filterBtn.addEventListener("click", () => {
     filterBtn.textContent = "Filter by urgency";
   }
 
-  const savedData = saveData();
-  console.log(savedData);
+  const savedTasks = saveTasks();
 
   tasksContainer.textContent = "";
   categoryArray = [];
   urgencyArray = [];
 
-  savedData.forEach((item) => {
-    console.log(item);
+  savedTasks.forEach((item) => {
     addTask(item.task, item.category, item.urgency, item.color, item.checked);
   });
 });
@@ -271,7 +271,7 @@ function addOptionToDatalist(userInput, type) {
 }
 
 // Save everything
-function saveData() {
+function saveTasks() {
   // Set the array where we'll store the objects with task info
   const tasksArray = [];
 
@@ -315,15 +315,26 @@ window.addEventListener("beforeunload", () => {
   // Clear previous cache
   localStorage.clear();
 
-  const savedData = saveData();
+  const savedTasks = saveTasks();
 
-  localStorage.setItem("tasks", JSON.stringify(savedData));
+  // Get url of background
+  const header = document.querySelector("header");
+  const url = header.style.backgroundImage;
+
+  localStorage.setItem("tasks", JSON.stringify(savedTasks));
   localStorage.setItem("filterMode", filterMode);
+  localStorage.setItem("backgroundImage", url);
   // localStorage.clear();
 });
 
 // Onload, download the info from the localStorage
 window.addEventListener("load", () => {
+  // Setting the previously set background image
+  const backgroundImage = localStorage.getItem("backgroundImage");
+  const header = document.querySelector("header");
+  console.log(backgroundImage);
+  header.style.backgroundImage = backgroundImage;
+
   // Setting the last filterMode used
   filterMode = localStorage.getItem("filterMode");
   if (filterMode == null) {
@@ -349,27 +360,6 @@ window.addEventListener("load", () => {
   //   addTask("Date my best friend's little sister");
   // }
 });
-
-// Set a mutation observer so that the eventListeners are up to date with the current crosses and the drag-and-drop symbols
-
-// We are only observing if a task (i.e. a li element) gets added or deleted
-const config = { attributes: true, childList: true, subtree: true };
-
-// Callback function to execute when mutation are observed
-const callback = function (mutationsList, observer) {
-  for (let mutation of mutationsList) {
-    if (mutation.type == "childList") {
-      // setListenersCrosses();
-      // makeElementsDraggable();
-    }
-  }
-};
-
-// Create the observer instance linked to the callback function
-const observer = new MutationObserver(callback);
-
-// Start checking for DOM tree mutations
-observer.observe(tasksContainer, config);
 
 // Set a loop listening to all crosses
 function setListenersCrosses() {
@@ -540,7 +530,7 @@ function getDragAfterElement(container, y) {
   ).element;
 }
 
-function setListenersDots(node) {
+function setListenersDots(detailsEl) {
   // Importing the template which is a document fragment
   const moreMenuTemplateNode = document.importNode(
     moreMenuTemplate.content,
@@ -553,7 +543,7 @@ function setListenersDots(node) {
   );
 
   // Creating the more menu after click on dots
-  node.addEventListener("click", (e) => {
+  detailsEl.addEventListener("click", (e) => {
     const dotBtn = e.target;
     const summaryEl = dotBtn.parentElement;
     const classTargeted = "task-list-template__details__button";
@@ -801,14 +791,14 @@ function setListenerTrash(summaryEl) {
   });
 }
 
-function setListenerEdit(node, moreMenu) {
-  function createListener(node, moreMenu) {
+function setListenerEdit(summaryEl, moreMenu) {
+  function createListener(summaryEl, moreMenu) {
     return new Promise((resolve) => {
       const editBtn = document.querySelector(
         ".more-menu-template__container__pencil"
       );
       editBtn.addEventListener("click", () => {
-        const pElement = node.querySelector("p");
+        const pElement = summaryEl.querySelector("p");
 
         pElement.setAttribute("contenteditable", true);
         pElement.focus();
@@ -842,11 +832,11 @@ function setListenerEdit(node, moreMenu) {
     });
   }
 
-  function disableToggle(event) {
-    event.preventDefault();
+  function disableToggle(e) {
+    e.preventDefault();
   }
 
-  createListener(node, moreMenu).then((res) => {
+  createListener(summaryEl, moreMenu).then((res) => {
     setCheckEditEnd(res.pElement, res.details);
   });
 }
@@ -874,4 +864,92 @@ function rgbToHex(rgb) {
   b = "#" + b.join("");
 
   return b;
+}
+
+//
+
+backgroundBtn.addEventListener("click", createBackgroundPicker);
+
+function createBackgroundPicker(e) {
+  const backgroundPicker = document.importNode(
+    backgroundPickerTemplate.content,
+    true
+  );
+  const imgSearchBar = backgroundPicker.querySelector("input");
+  const imageContainer = backgroundPicker.querySelector(
+    ".background-image__container__images"
+  );
+
+  const requestUrl =
+    "https://api.unsplash.com/search/photos?orientation=landscape&client_id=ggrp3P9OVQxIPMSA9HYN_2LyRC69U2jlm343qFU6738&query=";
+  document.body.appendChild(backgroundPicker);
+
+  imgSearchBar.focus();
+
+  // We are setting the listener for the key strokes in the search-bar. The API calls will be done in real time
+  imgSearchBar.addEventListener("keyup", callPhotos);
+
+  async function callPhotos() {
+    const search = requestUrl + imgSearchBar.value;
+    const resultImg = await getImages(search);
+    setThumbnails(resultImg);
+    setListenersPictures(resultImg);
+  }
+
+  function setThumbnails(resultImg) {
+    imageContainer.textContent = "";
+    let id = 0;
+    resultImg.forEach((pic) => {
+      const div = document.createElement("div");
+      div.classList.add("background-image__container__images__img");
+      const img = document.createElement("img");
+      img.src = pic.thumbnail;
+      img.id = id;
+      div.appendChild(img);
+      imageContainer.appendChild(div);
+      id++;
+    });
+  }
+
+  function setListenersPictures(resultImg) {
+    document.addEventListener("click", setListenerAllsPictures, true);
+    function setListenerAllsPictures(e) {
+      const img = e.target;
+      const div = img.parentElement;
+      const classTargeted = "background-image__container__images__img";
+      const hasClass = div.classList.contains(classTargeted);
+      if (hasClass) {
+        updatePicture(resultImg, img.id);
+      }
+    }
+  }
+
+  function updatePicture(resultImg, id) {
+    const header = document.querySelector("header");
+    const picture = resultImg[id];
+    header.style.backgroundImage = `url(${picture.large})`;
+  }
+
+  async function getImages(search) {
+    const picturesArr = [];
+    return fetch(search)
+      .then((response) => response.json())
+      .then((data) => {
+        const picturesObj = data.results;
+        picturesObj.forEach((pic) => {
+          const urls = pic.urls;
+          picturesArr.push({ thumbnail: urls.thumb, large: urls.regular });
+        });
+        return picturesArr;
+      });
+  }
+
+  // We are setting the listener for the click outside the backogrund-image__container that will make it go away
+  const container = document.querySelector(".background-image__container");
+  window.addEventListener("mousedown", setListenerExit);
+  function setListenerExit(e) {
+    if (!container.contains(e.target)) {
+      container.remove();
+    }
+  }
 }

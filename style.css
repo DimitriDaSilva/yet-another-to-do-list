@@ -43,6 +43,7 @@ header {
 
 #top-section__date {
   color: var(--dark-color);
+  font-weight: 300;
 }
 
 #top-section__icons {
@@ -51,13 +52,95 @@ header {
   align-items: center;
 }
 
-#top-section__reload img,
+#top-section__icons div {
+  display: flex;
+  align-items: center;
+}
+
+#top-section__background img,
 #top-section__dark-mode img {
   width: 1.2rem;
   cursor: pointer;
   margin-left: 0.8rem;
   filter: invert(23%) sepia(0%) saturate(0%) hue-rotate(144deg) brightness(104%)
     contrast(89%);
+}
+
+#top-section__background img {
+  width: 1.5rem;
+}
+
+.background-image__container {
+  position: absolute;
+  right: 10px;
+  top: 40px;
+  width: 250px;
+  background: var(--light-color);
+  border-radius: 2px;
+  box-shadow: 2px 2px 20px var(--dark-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  padding: 0.4rem;
+}
+
+.background-image__container__search-bar input {
+  border-radius: 2px;
+  border: none;
+  width: 100%;
+  background: var(--lightest-color);
+  font-family: "Ubuntu", sans-serif;
+  padding: 0.4rem;
+}
+
+.background-image__container__images {
+  width: 100%;
+  flex-grow: 1;
+  min-height: 50px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: space-between;
+}
+
+.background-image__container__images__img {
+  width: 48.8%;
+  height: 50px;
+  margin-top: 0.4rem;
+  cursor: pointer;
+}
+
+.background-image__container__images__img:hover {
+  opacity: 0.75;
+}
+
+.background-image__container__images__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.background-image__container__credit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 0.4rem;
+}
+
+.background-image__container__credit__text {
+  margin: 0;
+  padding-right: 0.2rem;
+  font-size: smaller;
+  font-weight: 300;
+  color: var(--dark-color);
+}
+
+.background-image__container__credit__logo {
+  padding-left: 0.2rem;
+  width: 70px;
+  filter: contrast(10%);
 }
 
 main {
