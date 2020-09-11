@@ -887,15 +887,19 @@ function createBackgroundPicker(e) {
   imgSearchBar.addEventListener("keyup", callPhotos);
 
   function callPhotos() {
-    console.log("test");
     async function success() {
       // const search = requestUrl + imgSearchBar.value;
-      const resultImg = `/.netlify/functions/node-fetch?search=${imgSearchBar.value}`;
-      console.log(resultImg);
-      // const resultImg = await getImages(search);
-      // setThumbnails(resultImg);
-      // setListenersPictures(resultImg);
+      const resultImg = await fetch(
+        `./.netlify/functions/node-fetch?search=${imgSearchBar.value}`
+      );
+      if (resultImg.ok) {
+        const photosUnsplash = await resultImg.json();
+        setThumbnails(photosUnsplash);
+        setListenersPictures(photosUnsplash);
+      }
     }
+
+    success();
   }
 
   function setThumbnails(resultImg) {
@@ -930,20 +934,6 @@ function createBackgroundPicker(e) {
     const header = document.querySelector("header");
     const picture = resultImg[id];
     header.style.backgroundImage = `url(${picture.large})`;
-  }
-
-  async function getImages(search) {
-    const picturesArr = [];
-    return fetch(search)
-      .then((response) => response.json())
-      .then((data) => {
-        const picturesObj = data.results;
-        picturesObj.forEach((pic) => {
-          const urls = pic.urls;
-          picturesArr.push({ thumbnail: urls.thumb, large: urls.regular });
-        });
-        return picturesArr;
-      });
   }
 
   // We are setting the listener for the click outside the backogrund-image__container that will make it go away
