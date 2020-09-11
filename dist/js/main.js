@@ -1,4 +1,4 @@
-// import unsplashApiKey from "./apiKeys.js";
+import unsplashApiKey from "./apiKeys.js";
 ("use strick");
 
 // Select buttons
@@ -879,8 +879,7 @@ function createBackgroundPicker(e) {
     ".background-image__container__images"
   );
 
-  const requestUrl =
-    "https://api.unsplash.com/search/photos?orientation=landscape&client_id=ggrp3P9OVQxIPMSA9HYN_2LyRC69U2jlm343qFU6738&query=";
+  const requestUrl = `https://api.unsplash.com/search/photos?orientation=landscape&client_id=${unsplashApiKey}&query=`;
   document.body.appendChild(backgroundPicker);
 
   imgSearchBar.focus();
