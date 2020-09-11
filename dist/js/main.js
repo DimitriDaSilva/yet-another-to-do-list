@@ -1,4 +1,3 @@
-// import unsplashApiKey from "./apiKeys.js";
 ("use strick");
 
 // Select buttons
@@ -879,7 +878,7 @@ function createBackgroundPicker(e) {
     ".background-image__container__images"
   );
 
-  const requestUrl = `https://api.unsplash.com/search/photos?orientation=landscape&client_id=${unsplashApiKey}&query=`;
+  // const requestUrl = `https://api.unsplash.com/search/photos?orientation=landscape&client_id=${unsplashApiKey}&query=`;
   document.body.appendChild(backgroundPicker);
 
   imgSearchBar.focus();
@@ -888,10 +887,12 @@ function createBackgroundPicker(e) {
   imgSearchBar.addEventListener("keyup", callPhotos);
 
   async function callPhotos() {
-    const search = requestUrl + imgSearchBar.value;
-    const resultImg = await getImages(search);
-    setThumbnails(resultImg);
-    setListenersPictures(resultImg);
+    // const search = requestUrl + imgSearchBar.value;
+    const resultImg = `/.netlify/functions/node-fetch?search=${imgSearchBar.value}`;
+    console.log(resultImg);
+    // const resultImg = await getImages(search);
+    // setThumbnails(resultImg);
+    // setListenersPictures(resultImg);
   }
 
   function setThumbnails(resultImg) {
