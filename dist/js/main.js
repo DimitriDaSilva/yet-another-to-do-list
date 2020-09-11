@@ -886,13 +886,16 @@ function createBackgroundPicker(e) {
   // We are setting the listener for the key strokes in the search-bar. The API calls will be done in real time
   imgSearchBar.addEventListener("keyup", callPhotos);
 
-  async function callPhotos() {
-    // const search = requestUrl + imgSearchBar.value;
-    const resultImg = `/.netlify/functions/node-fetch?search=${imgSearchBar.value}`;
-    console.log(resultImg);
-    // const resultImg = await getImages(search);
-    // setThumbnails(resultImg);
-    // setListenersPictures(resultImg);
+  function callPhotos() {
+    console.log("test");
+    async function success() {
+      // const search = requestUrl + imgSearchBar.value;
+      const resultImg = `/.netlify/functions/node-fetch?search=${imgSearchBar.value}`;
+      console.log(resultImg);
+      // const resultImg = await getImages(search);
+      // setThumbnails(resultImg);
+      // setListenersPictures(resultImg);
+    }
   }
 
   function setThumbnails(resultImg) {
