@@ -1,4 +1,4 @@
-import unsplashApiKey from "./apiKeys.js";
+// import unsplashApiKey from "./apiKeys.js";
 ("use strick");
 
 // Select buttons
