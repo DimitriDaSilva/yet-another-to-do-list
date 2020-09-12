@@ -36,7 +36,7 @@ body {
 }
 
 header {
-  background: url(./img/wallpapers/blue-mountains.jpg);
+  /* background: url(./img/wallpapers/blue-mountains.jpg); */
   background-position: center center;
   background-size: cover;
   display: flex;
@@ -386,7 +386,7 @@ summary::-webkit-details-marker {
   border-radius: 4px;
   background: var(--light-color);
   padding: 0.4rem;
-  box-shadow: 2px 2px 5px var(--light-ish-color);
+  box-shadow: 2px 2px 20px #444444;
   position: absolute;
   z-index: 3;
 }

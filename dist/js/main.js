@@ -1,3 +1,5 @@
+// const { default: fetch } = require("node-fetch");
+
 ("use strick");
 
 // Select buttons
@@ -331,18 +333,23 @@ window.addEventListener("beforeunload", () => {
   const savedTasks = saveTasks();
 
   // Get url of background
-  const header = document.querySelector("header");
-  const url = header.style.backgroundImage;
+  if (pictureCounter > 0) {
+    const header = document.querySelector("header");
+    const value = header.style.backgroundImage;
+    const regex = /(?:\(['"]?)(.*?)(?:['"]?\))/;
+    const url = regex.exec(value)[1];
+    localStorage.setItem("backgroundImage", url);
+  }
 
   localStorage.setItem("tasks", JSON.stringify(savedTasks));
   localStorage.setItem("darkMode", darkMode);
   localStorage.setItem("filterMode", filterMode);
-  localStorage.setItem("backgroundImage", url);
   // localStorage.clear();
 });
 
 // Onload, download the info from the localStorage
-window.addEventListener("load", () => {
+window.addEventListener("load", loadingPage);
+async function loadingPage() {
   // Setting the dark mode previously set. Default light
   darkMode = localStorage.getItem("darkMode");
   if (darkMode == null || darkMode == "light") {
@@ -353,9 +360,19 @@ window.addEventListener("load", () => {
   document.documentElement.setAttribute("data-theme", darkMode);
 
   // Setting the previously set background image
-  const backgroundImage = localStorage.getItem("backgroundImage");
-  const header = document.querySelector("header");
-  header.style.backgroundImage = backgroundImage;
+  let backgroundImage = localStorage.getItem("backgroundImage");
+  console.log(backgroundImage);
+  if (backgroundImage == null || backgroundImage == "") {
+    console.log("test");
+    backgroundImage = await callRandomPhoto();
+    console.log(backgroundImage);
+  }
+  updatePicture(backgroundImage);
+
+  // Setting the previously set background image
+  // const backgroundImage = localStorage.getItem("backgroundImage");
+  // const header = document.querySelector("header");
+  // header.style.backgroundImage = backgroundImage;
 
   // Setting the last filterMode used
   filterMode = localStorage.getItem("filterMode");
@@ -381,7 +398,7 @@ window.addEventListener("load", () => {
   //   addTask("Go find Voldemort's nose");
   //   addTask("Date my best friend's little sister");
   // }
-});
+}
 
 // Set a loop listening to all crosses
 function setListenersCrosses() {
@@ -904,9 +921,8 @@ function createBackgroundPicker(e) {
 
   function callPhotos() {
     async function success() {
-      // const search = requestUrl + imgSearchBar.value;
       const resultImg = await fetch(
-        `./.netlify/functions/node-fetch?search=${imgSearchBar.value}`
+        `./.netlify/functions/searchImg?search=${imgSearchBar.value}`
       );
       if (resultImg.ok) {
         const photosUnsplash = await resultImg.json();
@@ -933,6 +949,7 @@ function createBackgroundPicker(e) {
     });
   }
 
+  let pictureCounter = 0;
   function setListenersPictures(resultImg) {
     document.addEventListener("click", setListenerAllsPictures, true);
     function setListenerAllsPictures(e) {
@@ -941,18 +958,14 @@ function createBackgroundPicker(e) {
       const classTargeted = "background-image__container__images__img";
       const hasClass = div.classList.contains(classTargeted);
       if (hasClass) {
-        updatePicture(resultImg, img.id);
+        const pictureSelected = resultImg[img.id].large;
+        updatePicture(pictureSelected);
+        pictureCounter++;
       }
     }
   }
 
-  function updatePicture(resultImg, id) {
-    const header = document.querySelector("header");
-    const picture = resultImg[id];
-    header.style.backgroundImage = `url(${picture.large})`;
-  }
-
-  // We are setting the listener for the click outside the backogrund-image__container that will make it go away
+  // We are setting the listener for the click outside the background-image__container that will make it go away
   const container = document.querySelector(".background-image__container");
   window.addEventListener("mousedown", setListenerExit);
   function setListenerExit(e) {
@@ -961,6 +974,28 @@ function createBackgroundPicker(e) {
     }
   }
 }
+
+function updatePicture(image, id = null) {
+  const header = document.querySelector("header");
+  let picture;
+  if (id != null) {
+    picture = image[id].large;
+  } else {
+    picture = image;
+  }
+  header.style.backgroundImage = `url(${picture})`;
+}
+
+async function callRandomPhoto() {
+  const response = await fetch("./.netlify/functions/randomImg");
+  if (response.ok) {
+    const randomPicture = await response.json();
+    return randomPicture;
+  }
+  return null;
+}
+
+// updatePicture(callRandomPhoto());
 
 // Set today's date
 const dateEl = document.querySelector("#top-section__date");
