@@ -17,9 +17,22 @@
   --lightest-color: #ffffff;
 }
 
+[data-theme="dark"] {
+  --darkest-color: #ffffff;
+  --dark-color: #cecece;
+  --light-ish-color: #9b9b9b;
+  --light-color: #505050;
+  --lightest-color: #2b2b2b;
+}
+
+html,
 body {
+  height: 100%;
   margin: 0;
   font-family: "Ubuntu", sans-serif;
+  background: var(--lightest-color);
+  display: flex;
+  flex-direction: column;
 }
 
 header {
@@ -42,8 +55,9 @@ header {
 }
 
 #top-section__date {
-  color: var(--dark-color);
-  font-weight: 300;
+  color: #444444;
+  font-weight: 400;
+  margin: 0;
 }
 
 #top-section__icons {
@@ -57,17 +71,20 @@ header {
   align-items: center;
 }
 
-#top-section__background img,
-#top-section__dark-mode img {
-  width: 1.2rem;
+#top-section__dark-mode svg {
+  width: 1.5rem;
   cursor: pointer;
   margin-left: 0.8rem;
-  filter: invert(23%) sepia(0%) saturate(0%) hue-rotate(144deg) brightness(104%)
-    contrast(89%);
+  fill: #444444;
+  stroke: #444444;
 }
 
-#top-section__background img {
-  width: 1.5rem;
+#top-section__background svg {
+  width: 1.9rem;
+  cursor: pointer;
+  margin-left: 0.8rem;
+  fill: #444444;
+  stroke: #444444;
 }
 
 .background-image__container {
@@ -77,7 +94,7 @@ header {
   width: 250px;
   background: var(--light-color);
   border-radius: 2px;
-  box-shadow: 2px 2px 20px var(--dark-color);
+  box-shadow: 2px 2px 20px #444444;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -89,6 +106,7 @@ header {
   border-radius: 2px;
   border: none;
   width: 100%;
+  color: var(--dark-color);
   background: var(--lightest-color);
   font-family: "Ubuntu", sans-serif;
   padding: 0.4rem;
@@ -140,7 +158,7 @@ header {
 .background-image__container__credit__logo {
   padding-left: 0.2rem;
   width: 70px;
-  filter: contrast(10%);
+  fill: var(--dark-color);
 }
 
 main {
@@ -172,6 +190,7 @@ main {
   border-radius: 4px;
   flex: 1;
   padding: 0.4rem;
+  background: var(--lightest-color);
   color: var(--dark-color);
   font-family: "Ubuntu", sans-serif;
   grid-area: input;
@@ -226,6 +245,7 @@ main {
 .add-new-task__category-urgency label {
   margin-right: 1rem;
   font-size: smaller;
+  color: var(--dark-color);
 }
 
 .add-new-task__category-urgency__input {
@@ -236,7 +256,12 @@ main {
   flex: 1;
   padding: 0.4rem;
   color: var(--dark-color);
+  background: var(--lightest-color);
   font-family: "Ubuntu", sans-serif;
+}
+
+main {
+  flex: 1 0 auto;
 }
 
 #buttons {
@@ -244,70 +269,56 @@ main {
   display: flex;
   justify-content: space-between;
   flex-wrap: nowrap;
-  padding: 0.7rem;
+  padding: 0.7rem 0.7rem 0;
 }
 
-#buttons__filter {
-  margin-left: 5px;
-}
-
-#buttons__clear,
-#buttons__filter {
+#buttons__filter,
+#buttons__clear {
   border: none;
   background: none;
   font-style: italic;
   color: var(--light-ish-color);
   margin-top: 0.1rem;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+#buttons__filter svg,
+#buttons__clear svg {
+  fill: var(--light-ish-color);
+  stroke: var(--light-ish-color);
+  width: 16px;
+  height: 15px;
+  margin-right: 0.2rem;
+  stroke-width: 0.1px;
+}
+
+#buttons__filter p,
+#buttons__clear p {
+  margin: 0;
+}
+
+#buttons__clear svg path {
+  transform: scale(0.6);
 }
 
 @media (hover: hover) {
+  #buttons__filter:hover,
   #buttons__clear:hover {
     color: var(--dark-color);
   }
-  #buttons__filter:hover {
-    color: var(--dark-color);
+
+  #buttons__filter:hover svg,
+  #buttons__clear:hover svg {
+    fill: var(--dark-color);
+    stroke: var(--dark-color);
   }
-}
-
-#buttons__clear::before {
-  content: "";
-  background-image: url(./img/clear.svg);
-  background-size: 100% 100%;
-  display: inline-block;
-  height: 15px;
-  width: 15px;
-  position: relative;
-  right: 5px;
-  top: 2px;
-  filter: invert(65%) sepia(56%) saturate(0%) hue-rotate(223deg) brightness(91%)
-    contrast(98%);
-}
-
-@media (hover: hover) {
-  #buttons__clear:hover::before,
-  #buttons__filter:hover::before {
-    filter: invert(23%) sepia(0%) saturate(0%) hue-rotate(144deg)
-      brightness(104%) contrast(89%);
-  }
-}
-
-#buttons__filter::before {
-  content: "";
-  background-image: url(./img/filter.svg);
-  background-size: 100% 100%;
-  display: inline-block;
-  height: 15px;
-  width: 15px;
-  position: relative;
-  right: 5px;
-  top: 2px;
-  filter: invert(65%) sepia(56%) saturate(0%) hue-rotate(223deg) brightness(91%)
-    contrast(98%);
 }
 
 #tasks {
   width: 90%;
+  flex-grow: 1;
 }
 
 .task-list-template__details {
@@ -394,13 +405,17 @@ summary::-webkit-details-marker {
 .more-menu-template__container__buttons button {
   background: none;
   border: none;
+  display: flex;
+  align-items: center;
 }
 
-.more-menu-template__container__buttons button img {
+.more-menu-template__container__buttons button svg {
   width: 25px;
-  filter: invert(23%) sepia(0%) saturate(0%) hue-rotate(144deg) brightness(104%)
-    contrast(89%);
+  height: 25px;
   cursor: pointer;
+  fill: var(--dark-color);
+  stroke: var(--dark-color);
+  stroke-width: 0.1px;
 }
 
 .more-menu-template__container__colors {
@@ -413,7 +428,7 @@ summary::-webkit-details-marker {
   border-bottom-left-radius: 4px;
   background: var(--light-color);
   padding: 1rem 0.4rem 0.4rem;
-  box-shadow: 2px 2px 5px var(--light-ish-color);
+  box-shadow: 2px 2px 20px #444444;
   position: absolute;
   z-index: 2;
 }
@@ -554,4 +569,19 @@ ul label svg {
   overflow: hidden;
   width: 100%;
   position: fixed;
+}
+
+footer {
+  background: #444444;
+  width: 100%;
+  flex-shrink: 0;
+  border-top: 0.1px solid #ebebeb;
+}
+
+footer p {
+  text-align: center;
+  font-size: smaller;
+  font-weight: 300;
+  color: #ebebeb;
+  margin: 0.4rem;
 }

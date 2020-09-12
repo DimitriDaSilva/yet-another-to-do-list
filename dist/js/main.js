@@ -26,16 +26,30 @@ let urgencyArray = [];
 // Set the index of the first task
 let id = 1;
 
+// Setting the dark mode
+let darkMode = "";
+darkModeBtn.addEventListener("click", switchTheme);
+
+function switchTheme(e) {
+  if (darkMode == "light") {
+    darkMode = "dark";
+  } else {
+    darkMode = "light";
+  }
+  document.documentElement.setAttribute("data-theme", darkMode);
+}
+
 // Handling the filter
+const filterText = filterBtn.querySelector("p");
 const filters = ["category", "urgency"];
 let filterMode = "";
 filterBtn.addEventListener("click", () => {
   if (filterMode == filters[0]) {
     filterMode = filters[1];
-    filterBtn.textContent = "Filter by category";
+    filterText.textContent = "Filter by category";
   } else {
     filterMode = filters[0];
-    filterBtn.textContent = "Filter by urgency";
+    filterText.textContent = "Filter by urgency";
   }
 
   const savedTasks = saveTasks();
@@ -321,6 +335,7 @@ window.addEventListener("beforeunload", () => {
   const url = header.style.backgroundImage;
 
   localStorage.setItem("tasks", JSON.stringify(savedTasks));
+  localStorage.setItem("darkMode", darkMode);
   localStorage.setItem("filterMode", filterMode);
   localStorage.setItem("backgroundImage", url);
   // localStorage.clear();
@@ -328,6 +343,15 @@ window.addEventListener("beforeunload", () => {
 
 // Onload, download the info from the localStorage
 window.addEventListener("load", () => {
+  // Setting the dark mode previously set. Default light
+  darkMode = localStorage.getItem("darkMode");
+  if (darkMode == null || darkMode == "light") {
+    darkMode = "light";
+  } else {
+    darkMode = "dark";
+  }
+  document.documentElement.setAttribute("data-theme", darkMode);
+
   // Setting the previously set background image
   const backgroundImage = localStorage.getItem("backgroundImage");
   const header = document.querySelector("header");
@@ -339,9 +363,9 @@ window.addEventListener("load", () => {
     filterMode = filters[0];
   }
   if (filterMode == filters[0]) {
-    filterBtn.textContent = "Filter by urgency";
+    filterText.textContent = "Filter by urgency";
   } else {
-    filterBtn.textContent = "Filter by category";
+    filterText.textContent = "Filter by category";
   }
 
   // Adding all the tasks
@@ -839,14 +863,6 @@ function setListenerEdit(summaryEl, moreMenu) {
   });
 }
 
-// const color = element.style.getPropertyValue("--darkest-color");
-// Accessing the variable
-
-// // Modifying the variable
-// element.style.setProperty("--darkest-color", "#e9ecef");
-
-// https://dev.to/ananyaneogi/create-a-dark-light-mode-switch-with-css-variables-34l8
-
 function rgbToHex(rgb) {
   rgb = rgb.toString();
   let a = rgb.split("(")[1].split(")")[0];
@@ -945,3 +961,17 @@ function createBackgroundPicker(e) {
     }
   }
 }
+
+// Set today's date
+const dateEl = document.querySelector("#top-section__date");
+
+let todayDate = new Date();
+const options = {
+  weekday: "long",
+  month: "long",
+  day: "numeric",
+};
+dateEl.textContent = todayDate.toLocaleDateString("en-GB", options);
+
+// Change color of text and icon if dark background
+function changeTopSectionColors() {}
