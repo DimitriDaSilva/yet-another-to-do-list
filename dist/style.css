@@ -435,7 +435,7 @@ summary::-webkit-details-marker {
 
 @keyframes appearColor {
   0% {
-    transform: translateY(-2.5rem);
+    transform: translateY(-2rem);
   }
   100% {
     transform: translateY(0);

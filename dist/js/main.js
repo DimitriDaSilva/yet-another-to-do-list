@@ -66,7 +66,7 @@ filterBtn.addEventListener("click", () => {
 });
 
 // Give default value to categoryInput and urgencyInput if they are left empty
-function checkInput() {
+function setDefault() {
   if (categoryInput.value == "") {
     categoryInput.value = "Inbox";
   }
@@ -82,7 +82,7 @@ urgencyInput.addEventListener("keyup", checkValidInput);
 
 function checkValidInput(e) {
   if (e.keyCode == 13 && newTask.value != "") {
-    checkInput();
+    setDefault();
     addTask(newTask.value, categoryInput.value, urgencyInput.value);
   }
 }
@@ -90,7 +90,7 @@ function checkValidInput(e) {
 // Add a task after pressing the custom + button
 addTaskBtn.addEventListener("click", () => {
   if (newTask.value != "") {
-    checkInput();
+    setDefault();
     addTask(newTask.value, categoryInput.value, urgencyInput.value);
   }
 });
@@ -325,26 +325,24 @@ function saveTasks() {
   return tasksArray;
 }
 
+function sortTasks(tasksArray) {
+  // Create mock urgency array to sort
+  const MockUrgencyArray = ["High", "Medium", "Low", "None"];
+
+  return tasksArray.sort(
+    (a, b) =>
+      MockUrgencyArray.indexOf(a.urgency) - MockUrgencyArray.indexOf(b.urgency)
+  );
+}
+
 // Before closing the tab, load the info on the localStorage
 window.addEventListener("beforeunload", () => {
-  // Clear previous cache
-  localStorage.clear();
-
   const savedTasks = saveTasks();
+  const sortedTasks = sortTasks(savedTasks);
 
-  // Get url of background
-  if (pictureCounter > 0) {
-    const header = document.querySelector("header");
-    const value = header.style.backgroundImage;
-    const regex = /(?:\(['"]?)(.*?)(?:['"]?\))/;
-    const url = regex.exec(value)[1];
-    localStorage.setItem("backgroundImage", url);
-  }
-
-  localStorage.setItem("tasks", JSON.stringify(savedTasks));
+  localStorage.setItem("tasks", JSON.stringify(sortedTasks));
   localStorage.setItem("darkMode", darkMode);
   localStorage.setItem("filterMode", filterMode);
-  // localStorage.clear();
 });
 
 // Onload, download the info from the localStorage
@@ -359,20 +357,12 @@ async function loadingPage() {
   }
   document.documentElement.setAttribute("data-theme", darkMode);
 
-  // Setting the previously set background image
+  // Setting the previously set background image. If not background preivously set then get a random photo
   let backgroundImage = localStorage.getItem("backgroundImage");
-  console.log(backgroundImage);
   if (backgroundImage == null || backgroundImage == "") {
-    console.log("test");
     backgroundImage = await callRandomPhoto();
-    console.log(backgroundImage);
   }
   updatePicture(backgroundImage);
-
-  // Setting the previously set background image
-  // const backgroundImage = localStorage.getItem("backgroundImage");
-  // const header = document.querySelector("header");
-  // header.style.backgroundImage = backgroundImage;
 
   // Setting the last filterMode used
   filterMode = localStorage.getItem("filterMode");
@@ -705,8 +695,6 @@ function setListenerBrush(summaryEl, xPosition, yPosition) {
 
     // Get existing color from the bottom border
     const borderColor = getBottomBorderColor(summaryEl);
-    // const borderStyle = window.getComputedStyle(parent);
-    // const borderColor = borderStyle.getPropertyValue("border-bottom-color");
 
     // Format the circle that represents the current color
     formatColorCircle(borderColor);
@@ -888,16 +876,16 @@ function rgbToHex(rgb) {
 
   let b = a.map(function (x) {
     //For each array element
-    x = parseInt(x).toString(16); //Convert to a base16 string
-    return x.length == 1 ? "0" + x : x; //Add zero if we get only one character
+    //Convert to a base16 string
+    x = parseInt(x).toString(16);
+    //Add zero if we get only one character
+    return x.length == 1 ? "0" + x : x;
   });
 
   b = "#" + b.join("");
 
   return b;
 }
-
-//
 
 backgroundBtn.addEventListener("click", createBackgroundPicker);
 
@@ -911,7 +899,6 @@ function createBackgroundPicker(e) {
     ".background-image__container__images"
   );
 
-  // const requestUrl = `https://api.unsplash.com/search/photos?orientation=landscape&client_id=${unsplashApiKey}&query=`;
   document.body.appendChild(backgroundPicker);
 
   imgSearchBar.focus();
@@ -949,7 +936,6 @@ function createBackgroundPicker(e) {
     });
   }
 
-  let pictureCounter = 0;
   function setListenersPictures(resultImg) {
     document.addEventListener("click", setListenerAllsPictures, true);
     function setListenerAllsPictures(e) {
@@ -960,7 +946,7 @@ function createBackgroundPicker(e) {
       if (hasClass) {
         const pictureSelected = resultImg[img.id].large;
         updatePicture(pictureSelected);
-        pictureCounter++;
+        localStorage.setItem("backgroundImage", pictureSelected);
       }
     }
   }
@@ -995,8 +981,6 @@ async function callRandomPhoto() {
   return null;
 }
 
-// updatePicture(callRandomPhoto());
-
 // Set today's date
 const dateEl = document.querySelector("#top-section__date");
 
@@ -1007,6 +991,3 @@ const options = {
   day: "numeric",
 };
 dateEl.textContent = todayDate.toLocaleDateString("en-GB", options);
-
-// Change color of text and icon if dark background
-function changeTopSectionColors() {}
