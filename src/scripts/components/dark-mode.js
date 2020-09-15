@@ -1,7 +1,7 @@
 const darkModeBtn = document.querySelector("#top-section__dark-mode");
 
 // Setting the dark mode
-let darkMode = "";
+export let darkMode = "";
 export function setDarkModeBtn() {
   darkModeBtn.addEventListener("click", switchTheme);
 }

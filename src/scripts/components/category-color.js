@@ -1,4 +1,4 @@
-import { rgbToHex } from "/src/scripts//utils.js";
+import { rgbToHex } from "../utils.js";
 
 const moreMenuTemplate = document.querySelector("#more-menu-template");
 
