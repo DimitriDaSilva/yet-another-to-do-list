@@ -1,4 +1,4 @@
-import { updateHelperVariables } from "../main.js";
+import { categoryArray, urgencyArray } from "../main.js";
 import { addTask } from "./task-new.js";
 import { saveTasks } from "./task-save.js";
 
@@ -23,7 +23,8 @@ filterBtn.addEventListener("click", () => {
 
   tasksContainer.textContent = "";
 
-  updateHelperVariables([], []);
+  categoryArray.splice(0, categoryArray.length);
+  urgencyArray.splice(0, urgencyArray.length);
 
   savedTasks.forEach((item) => {
     addTask(item.task, item.category, item.urgency, item.color, item.checked);

@@ -1,3 +1,5 @@
+import { getCheckboxColor } from "./category-color.js";
+
 // Save everything
 export function saveTasks() {
   // Set the array where we'll store the objects with task info

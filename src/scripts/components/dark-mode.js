@@ -15,6 +15,6 @@ function switchTheme(e) {
   document.documentElement.setAttribute("data-theme", darkMode);
 }
 
-export function updateDarkMode(updatedDarkMode) {
+export function setDarkMode(updatedDarkMode) {
   darkMode = updatedDarkMode;
 }

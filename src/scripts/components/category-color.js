@@ -1,4 +1,4 @@
-import { rgbToHex } from "../utils.js";
+import { rgbToHex, getParentElement } from "../utils.js";
 
 const moreMenuTemplate = document.querySelector("#more-menu-template");
 
@@ -102,7 +102,7 @@ export function getBottomBorderColor(summaryEl) {
   return borderStyle.getPropertyValue("border-bottom-color");
 }
 
-function getCheckboxColor(liEl) {
+export function getCheckboxColor(liEl) {
   const checkbox = liEl.querySelector(".task-template__item__custom-checkbox");
   const checkboxStyle = window.getComputedStyle(checkbox);
   return rgbToHex(checkboxStyle.getPropertyValue("background-color"));

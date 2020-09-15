@@ -60,6 +60,7 @@ function createBackgroundPicker(e) {
       const classTargeted = "background-image__container__images__img";
       const hasClass = div.classList.contains(classTargeted);
       if (hasClass) {
+        console.log(resultImg[img.id]);
         const pictureSelected = resultImg[img.id].large;
         updatePicture(pictureSelected);
 

@@ -1,9 +1,4 @@
-import {
-  categoryArray,
-  urgencyArray,
-  id,
-  updateHelperVariables,
-} from "../main.js";
+import { categoryArray, urgencyArray, id, setId } from "../main.js";
 import { filters, filterMode } from "./filter.js";
 import {
   setColors,
@@ -20,10 +15,35 @@ const tasksContainer = document.querySelector("#tasks");
 const taskListTemplate = document.querySelector("#task-list-template");
 const taskTemplate = document.querySelector("#task-template");
 
+const addTaskBtn = document.querySelector("#add-new-task__button");
+
 // Select input value
 const newTask = document.querySelector("#add-new-task__input");
 const categoryInput = document.querySelector("#add-new-task__category__input");
 const urgencyInput = document.querySelector("#add-new-task__urgency__input");
+
+// Add a task after pressing the custom + button
+export function setNewTaskListeners() {
+  addTaskBtn.addEventListener("click", checkValidInputClick);
+
+  newTask.addEventListener("keyup", checkValidInputEnter);
+  categoryInput.addEventListener("keyup", checkValidInputEnter);
+  urgencyInput.addEventListener("keyup", checkValidInputEnter);
+}
+
+function checkValidInputClick() {
+  if (newTask.value !== "") {
+    setDefault();
+    addTask(newTask.value, categoryInput.value, urgencyInput.value);
+  }
+}
+
+function checkValidInputEnter(e) {
+  if (e.keyCode === 13 && newTask.value !== "") {
+    setDefault();
+    addTask(newTask.value, categoryInput.value, urgencyInput.value);
+  }
+}
 
 // Add a task with DOM manipulation
 export function addTask(
@@ -33,10 +53,6 @@ export function addTask(
   pickedColor = setRandColor(),
   taskCheck = false
 ) {
-  // Set default values if category and urgency are empty
-  // ES6 Default value not used were because the parameters is always passed
-  setDefault();
-
   // Based on the filterMode, filling the new list if needed
   const taskListTemplateNode = document.importNode(
     taskListTemplate.content,
@@ -189,12 +205,12 @@ export function addTask(
   newTask.value = "";
   categoryInput.value = "";
   urgencyInput.value = "";
-  id++;
-
-  updateHelperVariables(categoryArray, urgencyArray, id);
+  let newId = id;
+  setId(++newId);
 }
 
-// Give default value to categoryInput and urgencyInput if they are left empty
+// Set default values if category and urgency are empty
+// ES6 Default value not used were because the parameters is always passed
 function setDefault() {
   if (categoryInput.value === "") {
     categoryInput.value = "Inbox";

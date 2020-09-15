@@ -1,5 +1,5 @@
 import { addTask } from "./task-new.js";
-import { darkMode, updateDarkMode } from "./dark-mode.js";
+import { darkMode, setDarkMode } from "./dark-mode.js";
 import { filterMode, filters, filterText, updateFilter } from "./filter.js";
 import { callRandomPhoto, updatePicture } from "./wallpaper.js";
 
@@ -10,14 +10,11 @@ export function setLoadListener() {
 
 async function loadingPage() {
   // Setting the dark mode previously set. Default light
-  darkMode = localStorage.getItem("darkMode");
-  if (darkMode === null || darkMode === "light") {
-    darkMode = "light";
-  } else {
-    darkMode = "dark";
+  setDarkMode(localStorage.getItem("darkMode"));
+  if (darkMode === null) {
+    setDarkMode("light");
   }
   document.documentElement.setAttribute("data-theme", darkMode);
-  updateDarkMode(darkMode);
 
   // Setting the previously set background image. If not background preivously set then get a random photo
   let backgroundImage = localStorage.getItem("backgroundImage");
@@ -27,16 +24,15 @@ async function loadingPage() {
   updatePicture(backgroundImage);
 
   // Setting the last filterMode used
-  filterMode = localStorage.getItem("filterMode");
+  updateFilter(localStorage.getItem("filterMode"));
   if (filterMode === null) {
-    filterMode = filters[0];
+    updateFilter(filters[0]);
   }
   if (filterMode === filters[0]) {
     filterText.textContent = "Filter by urgency";
   } else {
     filterText.textContent = "Filter by category";
   }
-  updateFilter(filterMode);
 
   // Adding all the tasks
   if (localStorage.getItem("tasks") !== null) {

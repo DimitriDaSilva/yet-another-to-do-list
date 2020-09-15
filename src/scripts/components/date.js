@@ -1,10 +1,12 @@
-// Set today's date
-const dateEl = document.querySelector("#top-section__date");
+export function setDate() {
+  // Set today's date
+  const dateEl = document.querySelector("#top-section__date");
 
-const todayDate = new Date();
-const options = {
-  weekday: "long",
-  month: "long",
-  day: "numeric",
-};
-dateEl.textContent = todayDate.toLocaleDateString("en-GB", options);
+  const todayDate = new Date();
+  const options = {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+  };
+  dateEl.textContent = todayDate.toLocaleDateString("en-GB", options);
+}

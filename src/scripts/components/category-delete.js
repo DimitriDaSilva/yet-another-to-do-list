@@ -1,4 +1,4 @@
-import { categoryArray, urgencyArray, updateHelperVariables } from "../main.js";
+import { categoryArray, urgencyArray } from "../main.js";
 import { changeColorStatus } from "./category-color.js";
 
 export function setListenerTrash(summaryEl) {
@@ -20,8 +20,6 @@ export function setListenerTrash(summaryEl) {
 
     // Pass the color used as not used
     changeColorStatus(summaryEl);
-
-    updateHelperVariables(categoryArray, urgencyArray);
 
     // Delete the task group
     detailsEl.remove();

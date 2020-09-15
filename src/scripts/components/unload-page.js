@@ -4,11 +4,15 @@ import { darkMode } from "./dark-mode.js";
 import { filterMode } from "./filter.js";
 
 // Before closing the tab, load the info on the localStorage
-window.addEventListener("beforeunload", () => {
+export function setUnloadListener() {
+  window.addEventListener("beforeunload", unloadPage);
+}
+
+function unloadPage() {
   const savedTasks = saveTasks();
   const sortedTasks = sortTasks(savedTasks);
 
   localStorage.setItem("tasks", JSON.stringify(sortedTasks));
   localStorage.setItem("darkMode", darkMode);
   localStorage.setItem("filterMode", filterMode);
-});
+}

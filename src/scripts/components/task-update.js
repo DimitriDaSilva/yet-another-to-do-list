@@ -1,4 +1,5 @@
 import { getParentElement } from "../utils.js";
+import { filterMode, filters } from "./filter.js";
 
 // MOdify the category of the task upon drop and change its color
 export function updateTask(task) {
