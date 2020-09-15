@@ -1,0 +1,43 @@
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap");
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+:root {
+  --darkest-color: #111455;
+  --dark-color: #444444;
+  --light-ish-color: #a8a8a8;
+  --light-color: #ebebeb;
+  --lightest-color: #ffffff;
+}
+
+[data-theme="dark"] {
+  --darkest-color: #ffffff;
+  --dark-color: #cecece;
+  --light-ish-color: #9b9b9b;
+  --light-color: #505050;
+  --lightest-color: #2b2b2b;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: "Ubuntu", sans-serif;
+  background: var(--lightest-color);
+  display: flex;
+  flex-direction: column;
+}
+
+.stop-scroll {
+  height: 100%;
+  overflow: hidden;
+  width: 100%;
+  position: fixed;
+}

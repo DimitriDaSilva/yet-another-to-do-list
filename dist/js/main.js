@@ -1,6 +1,4 @@
-// const { default: fetch } = require("node-fetch");
-
-("use strick");
+"use strict";
 
 // Select buttons
 const addTaskBtn = document.querySelector("#add-new-task__button");
@@ -33,7 +31,7 @@ let darkMode = "";
 darkModeBtn.addEventListener("click", switchTheme);
 
 function switchTheme(e) {
-  if (darkMode == "light") {
+  if (darkMode === "light") {
     darkMode = "dark";
   } else {
     darkMode = "light";
@@ -46,7 +44,7 @@ const filterText = filterBtn.querySelector("p");
 const filters = ["category", "urgency"];
 let filterMode = "";
 filterBtn.addEventListener("click", () => {
-  if (filterMode == filters[0]) {
+  if (filterMode === filters[0]) {
     filterMode = filters[1];
     filterText.textContent = "Filter by category";
   } else {
@@ -67,10 +65,10 @@ filterBtn.addEventListener("click", () => {
 
 // Give default value to categoryInput and urgencyInput if they are left empty
 function setDefault() {
-  if (categoryInput.value == "") {
+  if (categoryInput.value === "") {
     categoryInput.value = "Inbox";
   }
-  if (urgencyInput.value == "") {
+  if (urgencyInput.value === "") {
     urgencyInput.value = "None";
   }
 }
@@ -81,7 +79,7 @@ categoryInput.addEventListener("keyup", checkValidInput);
 urgencyInput.addEventListener("keyup", checkValidInput);
 
 function checkValidInput(e) {
-  if (e.keyCode == 13 && newTask.value != "") {
+  if (e.keyCode === 13 && newTask.value !== "") {
     setDefault();
     addTask(newTask.value, categoryInput.value, urgencyInput.value);
   }
@@ -89,7 +87,7 @@ function checkValidInput(e) {
 
 // Add a task after pressing the custom + button
 addTaskBtn.addEventListener("click", () => {
-  if (newTask.value != "") {
+  if (newTask.value !== "") {
     setDefault();
     addTask(newTask.value, categoryInput.value, urgencyInput.value);
   }
@@ -114,7 +112,7 @@ function addTask(
   // Check if category exists already
   // If not, create it and append it to tasksContainer
   // If yes, do nothing
-  if (filterMode == filters[0] && categoryArray.indexOf(category) == -1) {
+  if (filterMode === filters[0] && categoryArray.indexOf(category) === -1) {
     // Insert category to existing ones
     categoryArray.push(category);
 
@@ -137,7 +135,10 @@ function addTask(
     tasksContainer.append(copyListNode);
 
     setListenersDots(copyListNode);
-  } else if (filterMode == filters[1] && urgencyArray.indexOf(urgency) == -1) {
+  } else if (
+    filterMode === filters[1] &&
+    urgencyArray.indexOf(urgency) === -1
+  ) {
     // Insert category to existing ones
     urgencyArray.push(urgency);
 
@@ -195,13 +196,13 @@ function addTask(
   pElement.append(taskString);
 
   // Appending the task in the right category
-  if (filterMode == filters[0]) {
+  if (filterMode === filters[0]) {
     allDetails.forEach((list) => {
       const hasClass = list.classList.contains(category);
       if (hasClass) {
         const ul = list.querySelector("ul");
         ul.append(taskTemplateNode);
-        if (list.open != true) {
+        if (list.open !== true) {
           list.open = true;
         }
 
@@ -219,7 +220,7 @@ function addTask(
       if (hasClass) {
         const ul = list.querySelector("ul");
         ul.append(taskTemplateNode);
-        if (list.open != true) {
+        if (list.open !== true) {
           list.open = true;
         }
 
@@ -276,7 +277,7 @@ function addOptionToDatalist(userInput, type) {
   });
 
   // Check if inputed category already exist. If not, add it
-  if (optionsArray.indexOf(userInput) != -1) {
+  if (optionsArray.indexOf(userInput) !== -1) {
     return;
   } else {
     const newOption = document.createElement("option");
@@ -350,7 +351,7 @@ window.addEventListener("load", loadingPage);
 async function loadingPage() {
   // Setting the dark mode previously set. Default light
   darkMode = localStorage.getItem("darkMode");
-  if (darkMode == null || darkMode == "light") {
+  if (darkMode === null || darkMode === "light") {
     darkMode = "light";
   } else {
     darkMode = "dark";
@@ -359,31 +360,31 @@ async function loadingPage() {
 
   // Setting the previously set background image. If not background preivously set then get a random photo
   let backgroundImage = localStorage.getItem("backgroundImage");
-  if (backgroundImage == null || backgroundImage == "") {
+  if (backgroundImage === null || backgroundImage === "") {
     backgroundImage = await callRandomPhoto();
   }
   updatePicture(backgroundImage);
 
   // Setting the last filterMode used
   filterMode = localStorage.getItem("filterMode");
-  if (filterMode == null) {
+  if (filterMode === null) {
     filterMode = filters[0];
   }
-  if (filterMode == filters[0]) {
+  if (filterMode === filters[0]) {
     filterText.textContent = "Filter by urgency";
   } else {
     filterText.textContent = "Filter by category";
   }
 
   // Adding all the tasks
-  if (localStorage.getItem("tasks") != null) {
+  if (localStorage.getItem("tasks") !== null) {
     const data = JSON.parse(localStorage.getItem("tasks"));
     data.forEach((item) => {
       addTask(item.task, item.category, item.urgency, item.color, item.checked);
     });
   }
 
-  // if (localStorage.length == 1 && data.length == 0) {
+  // if (localStorage.length === 1 && data.length === 0) {
   //   addTask("Crush my goals of the month", true);
   //   addTask("Go find Voldemort's nose");
   //   addTask("Date my best friend's little sister");
@@ -402,7 +403,7 @@ function setListenersCrosses() {
       const tasks = document.querySelectorAll(".task-template__item");
       tasks.forEach((task) => {
         const inputId = task.querySelector("input").id;
-        if (inputId == crossId) {
+        if (inputId === crossId) {
           task.remove();
         }
       });
@@ -470,7 +471,7 @@ function updateTask(task) {
   const groupName = detailsEl.classList.item(1);
   let classToBeReplaced = "";
 
-  if (filterMode == filters[0]) {
+  if (filterMode === filters[0]) {
     classToBeReplaced = task.classList.item(1);
   } else {
     classToBeReplaced = task.classList.item(2);
@@ -490,14 +491,14 @@ function updateTask(task) {
 tasksContainer.addEventListener("touchmove", (e) => {
   const myLocation = e.targetTouches[0];
   const target = document.elementFromPoint(myLocation.pageX, myLocation.pageY);
-  if (target != null) {
+  if (target !== null) {
     const targetUl = getParentElement(target, "UL");
-    if (targetUl.tagName == "UL") {
+    if (targetUl.tagName === "UL") {
       e.preventDefault();
       const touchY = e.targetTouches[0].pageY;
       const afterElement = getDragAfterElement(targetUl, touchY);
       const task = document.querySelector(".task-template__item--dragging");
-      if (afterElement == null) {
+      if (afterElement === null) {
         targetUl.appendChild(task);
       } else {
         targetUl.insertBefore(task, afterElement);
@@ -509,13 +510,13 @@ tasksContainer.addEventListener("touchmove", (e) => {
 // For mouse-based devices
 tasksContainer.addEventListener("dragover", (e) => {
   const target = document.elementFromPoint(e.clientX, e.clientY);
-  if (target != null) {
+  if (target !== null) {
     const targetUl = getParentElement(target, "UL");
-    if (targetUl.tagName == "UL") {
+    if (targetUl.tagName === "UL") {
       e.preventDefault();
       const afterElement = getDragAfterElement(targetUl, e.clientY);
       const task = document.querySelector(".task-template__item--dragging");
-      if (afterElement == null) {
+      if (afterElement === null) {
         targetUl.appendChild(task);
       } else {
         targetUl.insertBefore(task, afterElement);
@@ -525,10 +526,10 @@ tasksContainer.addEventListener("dragover", (e) => {
 });
 
 function getParentElement(object, tag) {
-  if (object.tagName == tag) {
+  if (object.tagName === tag) {
     return object;
   }
-  if (object.tagName == "BODY") {
+  if (object.tagName === "BODY") {
     return {};
   }
   return getParentElement(object.parentElement, tag);
@@ -614,7 +615,7 @@ function setListenersDots(detailsEl) {
       function setListenerExitMoreMenu(e) {
         if (!placeholder.contains(e.target)) {
           // Removing the event listeners of the color buttons, otherwise they stack each other
-          if (placeholder.childElementCount == 2) {
+          if (placeholder.childElementCount === 2) {
             colorPalette.removeEventListener(
               "click",
               colorListenerHandler,
@@ -664,7 +665,9 @@ function setRandColor() {
   let randIndex;
 
   // Use case where there are more than 10 categories being used, we reset the used properties
-  if (presetColors.filter((color) => color.used == true).length == numbColors) {
+  if (
+    presetColors.filter((color) => color.used === true).length === numbColors
+  ) {
     presetColors.forEach((color) => {
       color.used = false;
     });
@@ -716,7 +719,7 @@ function formatColorCircle(borderColor) {
     color.style.boxShadow = "none";
     const rgbColor = color.style.background;
     const hexColor = rgbToHex(rgbColor);
-    if (rgbColor == borderColor) {
+    if (rgbColor === borderColor) {
       color.style.boxShadow = `0 0 0 3px ${hexColor}44`;
     }
   });
@@ -757,22 +760,22 @@ function colorListenerHandler(e) {
 // Use the default value for when we only want to delete and category and no longer use a color
 function changeColorStatus(summaryEl = null, pickedColor = null) {
   let detailsEl, oldColor, rgbPickedColor;
-  if (summaryEl != null) {
+  if (summaryEl !== null) {
     detailsEl = summaryEl.parentElement;
     oldColor = detailsEl.classList.item(2);
   }
 
   if (/^#/.test(pickedColor)) {
     rgbPickedColor = pickedColor;
-  } else if (pickedColor != null) {
+  } else if (pickedColor !== null) {
     rgbPickedColor = rgbToHex(pickedColor);
     detailsEl.classList.replace(oldColor, rgbPickedColor);
   }
 
   presetColors.forEach((color) => {
-    if (color.color == oldColor) {
+    if (color.color === oldColor) {
       color.used = false;
-    } else if (color.color == rgbPickedColor) {
+    } else if (color.color === rgbPickedColor) {
       color.used = true;
     }
   });
@@ -802,7 +805,7 @@ function setListenerTrash(summaryEl) {
   const classDetailsEl = detailsEl.classList.item(1);
   trashIcon.addEventListener("click", (e) => {
     // Delete the category from array
-    if (categoryArray.indexOf(classDetailsEl) != -1) {
+    if (categoryArray.indexOf(classDetailsEl) !== -1) {
       const indexCat = categoryArray.indexOf(classDetailsEl);
       categoryArray.splice(indexCat, 1);
     } else {
@@ -830,7 +833,7 @@ function setListenerEdit(summaryEl, moreMenu) {
         pElement.setAttribute("contenteditable", true);
         pElement.focus();
 
-        const details = node.parentElement;
+        const details = summaryEl.parentElement;
         details.addEventListener("click", disableToggle, true);
 
         moreMenu.parentElement.remove();
@@ -843,7 +846,7 @@ function setListenerEdit(summaryEl, moreMenu) {
   function setCheckEditEnd(pElement, details) {
     return new Promise((resolve) => {
       pElement.addEventListener("keydown", (e) => {
-        if (e.keyCode == 13) {
+        if (e.keyCode === 13) {
           details.removeEventListener("click", disableToggle, true);
           pElement.setAttribute("contenteditable", false);
         }
@@ -879,7 +882,7 @@ function rgbToHex(rgb) {
     //Convert to a base16 string
     x = parseInt(x).toString(16);
     //Add zero if we get only one character
-    return x.length == 1 ? "0" + x : x;
+    return x.length === 1 ? "0" + x : x;
   });
 
   b = "#" + b.join("");
@@ -964,7 +967,7 @@ function createBackgroundPicker(e) {
 function updatePicture(image, id = null) {
   const header = document.querySelector("header");
   let picture;
-  if (id != null) {
+  if (id !== null) {
     picture = image[id].large;
   } else {
     picture = image;
@@ -984,7 +987,7 @@ async function callRandomPhoto() {
 // Set today's date
 const dateEl = document.querySelector("#top-section__date");
 
-let todayDate = new Date();
+const todayDate = new Date();
 const options = {
   weekday: "long",
   month: "long",
