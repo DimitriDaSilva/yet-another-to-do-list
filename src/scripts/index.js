@@ -1,6 +1,10 @@
-"use strict";
+/* Import stylesheets */
+import "../styles/01-reset.css";
+import "../styles/02-header.css";
+import "../styles/03-main.css";
+import "../styles/04-footer.css";
 
-/* Imports */
+/* Import scripts */
 import { setNewTaskListeners } from "./components/task-new.js";
 import { accessibility } from "./components/accessibility.js";
 import { setLoadListener } from "./components/load-page.js";

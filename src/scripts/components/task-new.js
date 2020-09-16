@@ -1,4 +1,4 @@
-import { categoryArray, urgencyArray, id, setId } from "../main.js";
+import { categoryArray, urgencyArray, id, setId } from "../index.js";
 import { filters, filterMode } from "./filter.js";
 import {
   setColors,

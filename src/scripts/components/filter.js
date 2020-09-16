@@ -1,4 +1,4 @@
-import { categoryArray, urgencyArray } from "../main.js";
+import { categoryArray, urgencyArray } from "../index.js";
 import { addTask } from "./task-new.js";
 import { saveTasks } from "./task-save.js";
 

@@ -1,4 +1,4 @@
-import { categoryArray, urgencyArray } from "../main.js";
+import { categoryArray, urgencyArray } from "../index.js";
 import { changeColorStatus } from "./category-color.js";
 
 export function setListenerTrash(summaryEl) {
