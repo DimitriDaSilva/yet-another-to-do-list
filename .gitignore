@@ -1,3 +1,4 @@
-.netlify
-dist/
+.netlify/
+old/
 netlify.toml
+node_modules/
