@@ -13,16 +13,16 @@ export const colorPalette = colorPaletteTemplateNode.querySelector(
 const colors = colorPalette.querySelectorAll("button");
 
 const presetColors = [
-  { color: "#111455", used: false },
+  { color: "#666CE1", used: false },
   { color: "#e63946", used: false },
   { color: "#2a9d8f", used: false },
   { color: "#f4a261", used: false },
   { color: "#a8dadc", used: false },
   { color: "#ffb4a2", used: false },
-  { color: "#a5a58d", used: false },
+  { color: "#606c38", used: false },
   { color: "#f2cc8f", used: false },
   { color: "#ef476f", used: false },
-  { color: "#fee440", used: false },
+  { color: "#FEDD0B", used: false },
 ];
 let index = 0;
 

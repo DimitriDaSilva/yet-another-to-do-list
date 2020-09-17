@@ -59,6 +59,7 @@ main {
 
 #tasks {
   width: 90%;
+  transition: grid-template-columns 0.5s;
 }
 
 .task-list-template__details {

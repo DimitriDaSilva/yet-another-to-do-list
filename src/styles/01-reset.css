@@ -10,7 +10,6 @@
 }
 
 :root {
-  --darkest-color: #111455;
   --dark-color: #444444;
   --light-ish-color: #a8a8a8;
   --light-color: #ebebeb;
@@ -18,7 +17,6 @@
 }
 
 [data-theme="dark"] {
-  --darkest-color: #ffffff;
   --dark-color: #cecece;
   --light-ish-color: #9b9b9b;
   --light-color: #505050;
