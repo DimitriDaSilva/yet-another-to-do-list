@@ -86,6 +86,17 @@ summary::-webkit-details-marker {
   margin: 0;
 }
 
+.swal-modal {
+  background: var(--dark-color);
+}
+
+.swal-title,
+.swal-text {
+  font-family: "Ubuntu", sans-serif;
+  color: var(--lightest-color);
+  text-align: center;
+}
+
 .task-list-template__details[open] .task-list-template__details__list {
   animation: fadeIn 0.4s ease-in-out;
 }

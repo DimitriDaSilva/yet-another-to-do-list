@@ -26,7 +26,7 @@ async function loadingPage() {
   // Setting the last filterMode used
   updateFilter(localStorage.getItem("filterMode"));
   if (filterMode === null) {
-    updateFilter(filters[0]);
+    updateFilter(filters[1]);
   }
   if (filterMode === filters[0]) {
     filterText.textContent = "Filter by urgency";

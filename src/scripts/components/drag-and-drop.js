@@ -1,4 +1,4 @@
-import { updateTask } from "./task-update.js";
+import { filterMode, filters } from "./filter.js";
 import { getParentElement } from "../utils.js";
 
 const tasksContainer = document.querySelector("#tasks");
@@ -28,7 +28,7 @@ export function makeElementsDraggable() {
 
     task.addEventListener("touchend", () => {
       clearTimeout(touchTimeout);
-      updateTask(task);
+      updateTaskColor(task);
       task.draggable = false;
       document.body.classList.remove("stop-scroll");
       task.classList.remove("task-template__item--dragging");
@@ -47,7 +47,7 @@ export function makeElementsDraggable() {
     });
 
     task.addEventListener("dragend", () => {
-      updateTask(task);
+      updateTaskColor(task);
       task.classList.remove("task-template__item--dragging");
       dragLogo.classList.remove("task-template__item--ongoing-drag");
       task.draggable = false;
@@ -116,4 +116,28 @@ export function getDragAfterElement(container, y) {
       offset: Number.NEGATIVE_INFINITY,
     }
   ).element;
+}
+
+// MOdify the category of the task upon drop and change its color
+function updateTaskColor(task) {
+  const detailsEl = getParentElement(task, "DETAILS");
+
+  // Modify its category
+  const groupName = detailsEl.classList.item(1);
+  let classToBeReplaced = "";
+
+  if (filterMode === filters[0]) {
+    classToBeReplaced = task.classList.item(1);
+  } else {
+    classToBeReplaced = task.classList.item(2);
+  }
+
+  task.classList.replace(classToBeReplaced, groupName);
+
+  // Update the color
+  const strokeColor = detailsEl.classList.item(2);
+  const checkboxEl = task.querySelector(
+    ".task-template__item__custom-checkbox"
+  );
+  checkboxEl.style.background = strokeColor;
 }

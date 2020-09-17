@@ -1,3 +1,5 @@
+import swal from "sweetalert";
+
 export function setListenerEdit(summaryEl, moreMenu) {
   createListener(summaryEl, moreMenu).then((res) => {
     setCheckEditEnd(res.pElement, res.details);
@@ -18,7 +20,7 @@ function createListener(summaryEl, moreMenu) {
       const details = summaryEl.parentElement;
       details.addEventListener("click", disableToggle, true);
 
-      moreMenu.parentElement.remove();
+      moreMenu.remove();
 
       resolve({ pElement: pElement, details: details });
     });
@@ -28,16 +30,20 @@ function createListener(summaryEl, moreMenu) {
 function setCheckEditEnd(pElement, details) {
   return new Promise((resolve) => {
     pElement.addEventListener("keydown", (e) => {
-      if (e.keyCode === 13) {
+      const newName = pElement.textContent;
+      if (e.keyCode === 13 && isValidEdit(newName)) {
         details.removeEventListener("click", disableToggle, true);
         pElement.setAttribute("contenteditable", false);
+        updateTaskEdit(newName, details);
       }
     });
 
     window.addEventListener("mousedown", (e) => {
-      if (!pElement.contains(e.target)) {
+      const newName = pElement.textContent;
+      if (!pElement.contains(e.target) && isValidEdit(newName)) {
         details.removeEventListener("click", disableToggle, true);
         pElement.setAttribute("contenteditable", false);
+        updateTaskEdit(newName, details);
       }
     });
     resolve(pElement);
@@ -46,4 +52,31 @@ function setCheckEditEnd(pElement, details) {
 
 function disableToggle(e) {
   e.preventDefault();
+}
+
+function updateTaskEdit(newValue, detailsEl) {
+  const liElements = detailsEl.querySelectorAll("li");
+  let classToBeReplaced = "";
+
+  classToBeReplaced = detailsEl.classList.item(1);
+
+  liElements.forEach((task) => {
+    task.classList.replace(classToBeReplaced, newValue);
+  });
+}
+
+function isValidEdit(newValue) {
+  const regex = /\s/;
+
+  if (regex.test(newValue)) {
+    swal({
+      title: "Error",
+      text: "No whitespaces allowed. Please change the new name given",
+      icon: "error",
+      button: false,
+    });
+    return false;
+  } else {
+    return true;
+  }
 }

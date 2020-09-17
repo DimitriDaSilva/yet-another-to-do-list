@@ -10,6 +10,7 @@ import { setListenersDots } from "./category-more.js";
 import { addOptionToDatalist } from "./dropdown-list.js";
 import { makeElementsDraggable } from "./drag-and-drop.js";
 import { setListenersCrosses } from "./task-delete.js";
+import { isValid, defaultCategory, defaultUrgency } from "./form-validation.js";
 
 const tasksContainer = document.querySelector("#tasks");
 const taskListTemplate = document.querySelector("#task-list-template");
@@ -32,15 +33,23 @@ export function setNewTaskListeners() {
 }
 
 function checkValidInputClick() {
-  if (newTask.value !== "") {
-    setDefault();
+  const input = {
+    task: newTask.value,
+    category: categoryInput.value,
+    urgency: urgencyInput.value,
+  };
+  if (isValid(input)) {
     addTask(newTask.value, categoryInput.value, urgencyInput.value);
   }
 }
 
 function checkValidInputEnter(e) {
-  if (e.keyCode === 13 && newTask.value !== "") {
-    setDefault();
+  const input = {
+    task: newTask.value,
+    category: categoryInput.value,
+    urgency: urgencyInput.value,
+  };
+  if (e.keyCode === 13 && isValid(input)) {
     addTask(newTask.value, categoryInput.value, urgencyInput.value);
   }
 }
@@ -53,6 +62,10 @@ export function addTask(
   pickedColor = setRandColor(),
   taskCheck = false
 ) {
+  // Set default value if empty
+  category = defaultCategory(category);
+  urgency = defaultUrgency(urgency);
+
   // Based on the filterMode, filling the new list if needed
   const taskListTemplateNode = document.importNode(
     taskListTemplate.content,
@@ -207,15 +220,4 @@ export function addTask(
   urgencyInput.value = "";
   let newId = id;
   setId(++newId);
-}
-
-// Set default values if category and urgency are empty
-// ES6 Default value not used were because the parameters is always passed
-function setDefault() {
-  if (categoryInput.value === "") {
-    categoryInput.value = "Inbox";
-  }
-  if (urgencyInput.value === "") {
-    urgencyInput.value = "None";
-  }
 }
