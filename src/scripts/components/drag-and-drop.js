@@ -62,7 +62,9 @@ tasksContainer.addEventListener("touchmove", (e) => {
   if (target !== null) {
     const targetUl = getParentElement(target, "UL");
     if (targetUl.tagName === "UL") {
-      e.preventDefault();
+      if (e.cancelable) {
+        e.preventDefault();
+      }
       const touchY = e.targetTouches[0].pageY;
       const afterElement = getDragAfterElement(targetUl, touchY);
       const task = document.querySelector(".task-template__item--dragging");
