@@ -61,7 +61,8 @@ function createBackgroundPicker(e) {
       const hasClass = div.classList.contains(classTargeted);
       if (hasClass) {
         const pictureSelected = resultImg[img.id].large;
-        updatePicture(pictureSelected);
+        setBackground(pictureSelected);
+        setColorTopSection();
 
         // We are only saving the image in the background if the user has selected it
         localStorage.setItem("backgroundImage", pictureSelected);
@@ -79,9 +80,28 @@ function createBackgroundPicker(e) {
   }
 }
 
-export function updatePicture(image) {
+export function setBackground(img) {
+  const backgroundImg = document.querySelector("#top-section__image");
+  backgroundImg.src = img;
+}
+
+export function resizeBackground() {
   const header = document.querySelector("header");
-  header.style.backgroundImage = `url(${image})`;
+  const backgroundContainer = document.querySelector(
+    "#top-section__image-container"
+  );
+
+  const headerWidth = header.offsetWidth.toString() + "px";
+  const headerHeight = header.offsetHeight.toString() + "px";
+
+  backgroundContainer.style.width = headerWidth;
+  backgroundContainer.style.height = headerHeight;
+
+  setColorTopSection();
+}
+
+export function setResizeListener() {
+  window.addEventListener("resize", resizeBackground);
 }
 
 export async function callRandomPhoto() {
@@ -91,4 +111,52 @@ export async function callRandomPhoto() {
     return randomPicture;
   }
   return null;
+}
+
+export function setColorTopSection() {
+  const date = document.querySelector("#top-section__date");
+  const darkModeBtn = document.querySelector("#top-section__dark-mode svg");
+  const backgroundBtn = document.querySelector("#top-section__background svg");
+  const elements = [date, darkModeBtn, backgroundBtn];
+
+  elements.forEach((el) => {
+    const position = getPosition(el);
+    const backgroundColor = getColorFromBackground(position);
+    const color = isLight(backgroundColor) ? "#444444" : "#cecece";
+
+    el.style.color = color;
+    el.style.fill = color;
+    el.style.stroke = color;
+  });
+}
+
+function getPosition(element) {
+  const rect = element.getBoundingClientRect();
+  return {
+    x: rect.left + window.scrollX,
+    y: rect.top + window.scrollY,
+  };
+}
+
+function getColorFromBackground(position) {
+  const img = document.querySelector("#top-section__image");
+  const canvas = document.createElement("canvas");
+
+  canvas.width = img.offsetWidth;
+  canvas.height = img.offsetHeight;
+
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0);
+
+  return ctx.getImageData(position.x, position.y, 1, 1).data;
+}
+
+function isLight(rgb) {
+  console.log(rgb);
+  const luma = 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
+  if (luma > 128) {
+    return true;
+  } else {
+    return false;
+  }
 }

@@ -1,7 +1,12 @@
 import { addTask } from "./task-new.js";
 import { darkMode, setDarkMode } from "./dark-mode.js";
 import { filterMode, filters, filterText, updateFilter } from "./filter.js";
-import { callRandomPhoto, updatePicture } from "./wallpaper.js";
+import {
+  callRandomPhoto,
+  setBackground,
+  resizeBackground,
+  setColorTopSection,
+} from "./wallpaper.js";
 
 // Onload, download the info from the localStorage
 export function setLoadListener() {
@@ -21,7 +26,9 @@ async function loadingPage() {
   if (backgroundImage === null || backgroundImage === "") {
     backgroundImage = await callRandomPhoto();
   }
-  updatePicture(backgroundImage);
+  resizeBackground();
+  setBackground(backgroundImage);
+  setColorTopSection();
 
   // Setting the last filterMode used
   updateFilter(localStorage.getItem("filterMode"));

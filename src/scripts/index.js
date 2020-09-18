@@ -10,7 +10,7 @@ import { accessibility } from "./components/accessibility.js";
 import { setLoadListener } from "./components/load-page.js";
 import { setUnloadListener } from "./components/unload-page.js";
 import { setClearListener } from "./components/remove-complete.js";
-import { setBackgroundBtn } from "./components/wallpaper.js";
+import { setBackgroundBtn, setResizeListener } from "./components/wallpaper.js";
 import { setDarkModeBtn } from "./components/dark-mode.js";
 import { setDate } from "./components/date.js";
 
@@ -33,3 +33,4 @@ setClearListener();
 setBackgroundBtn();
 setDarkModeBtn();
 setDate();
+setResizeListener();
