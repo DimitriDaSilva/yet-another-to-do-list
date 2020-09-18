@@ -6,6 +6,7 @@ import {
   setBackground,
   resizeBackground,
 } from "./wallpaper.js";
+import { colorPairs, setColorPairLoad } from "./category-color.js";
 
 // Onload, download the info from the localStorage
 export function setLoadListener() {
@@ -40,10 +41,17 @@ async function loadingPage() {
   }
 
   // Adding all the tasks
+  setColorPairLoad(JSON.parse(localStorage.getItem("colorPairs")));
   if (localStorage.getItem("tasks") !== null) {
     const data = JSON.parse(localStorage.getItem("tasks"));
     data.forEach((item) => {
-      addTask(item.task, item.category, item.urgency, item.color, item.checked);
+      let color = "";
+      if (filterMode === filters[0]) {
+        color = colorPairs[filterMode][item.category];
+      } else {
+        color = colorPairs[filterMode][item.urgency];
+      }
+      addTask(item.task, item.category, item.urgency, color, item.checked);
     });
   }
 

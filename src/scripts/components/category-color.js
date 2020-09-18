@@ -25,6 +25,18 @@ const presetColors = [
   { color: "#FEDD0B", used: false },
 ];
 let index = 0;
+export let colorPairs = {
+  category: {},
+  urgency: {},
+};
+
+export function setColorPairLoad(obj) {
+  colorPairs = obj;
+}
+
+export function setColorPair(type, key, value) {
+  colorPairs[type][key] = value;
+}
 
 colors.forEach((color) => {
   color.style.background = presetColors[index].color;

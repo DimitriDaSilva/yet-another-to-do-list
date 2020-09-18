@@ -1,6 +1,7 @@
 import { categoryArray, urgencyArray } from "../index.js";
 import { addTask } from "./task-new.js";
 import { saveTasks } from "./task-save.js";
+import { colorPairs } from "./category-color.js";
 
 const tasksContainer = document.querySelector("#tasks");
 const filterBtn = document.querySelector("#buttons__filter");
@@ -27,7 +28,13 @@ filterBtn.addEventListener("click", () => {
   urgencyArray.splice(0, urgencyArray.length);
 
   savedTasks.forEach((item) => {
-    addTask(item.task, item.category, item.urgency, item.color, item.checked);
+    let color = "";
+    if (filterMode === filters[0]) {
+      color = colorPairs[filterMode][item.category];
+    } else {
+      color = colorPairs[filterMode][item.urgency];
+    }
+    addTask(item.task, item.category, item.urgency, color, item.checked);
   });
 });
 

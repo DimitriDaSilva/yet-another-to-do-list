@@ -5,6 +5,7 @@ import {
   changeColorStatus,
   setRandColor,
   getBottomBorderColor,
+  setColorPair,
 } from "./category-color.js";
 import { setListenersDots } from "./category-more.js";
 import { addOptionToDatalist } from "./dropdown-list.js";
@@ -97,6 +98,9 @@ export function addTask(
     copyListNode.classList.add(pickedColor);
     changeColorStatus(null, pickedColor);
 
+    // Add the value/color pair
+    setColorPair("category", category, pickedColor);
+
     tasksContainer.append(copyListNode);
 
     setListenersDots(copyListNode);
@@ -128,6 +132,9 @@ export function addTask(
     // Asign the pickedColor to the category as a class
     copyListNode.classList.add(pickedColor);
     changeColorStatus(null, pickedColor);
+
+    // Add the value/color pair
+    setColorPair("urgency", urgency, pickedColor);
 
     tasksContainer.append(copyListNode);
 
