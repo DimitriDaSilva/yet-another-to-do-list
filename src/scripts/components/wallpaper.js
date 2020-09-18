@@ -62,7 +62,6 @@ function createBackgroundPicker(e) {
       if (hasClass) {
         const pictureSelected = resultImg[img.id].large;
         setBackground(pictureSelected);
-        setColorTopSection();
 
         // We are only saving the image in the background if the user has selected it
         localStorage.setItem("backgroundImage", pictureSelected);
@@ -82,6 +81,9 @@ function createBackgroundPicker(e) {
 
 export function setBackground(img) {
   const backgroundImg = document.querySelector("#top-section__image");
+  backgroundImg.onload = () => {
+    setColorTopSection();
+  };
   backgroundImg.src = img;
 }
 
@@ -152,7 +154,6 @@ function getColorFromBackground(position) {
 }
 
 function isLight(rgb) {
-  console.log(rgb);
   const luma = 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
   if (luma > 128) {
     return true;

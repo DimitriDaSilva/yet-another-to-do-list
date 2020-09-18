@@ -5,7 +5,6 @@ import {
   callRandomPhoto,
   setBackground,
   resizeBackground,
-  setColorTopSection,
 } from "./wallpaper.js";
 
 // Onload, download the info from the localStorage
@@ -28,7 +27,6 @@ async function loadingPage() {
   }
   resizeBackground();
   setBackground(backgroundImage);
-  setColorTopSection();
 
   // Setting the last filterMode used
   updateFilter(localStorage.getItem("filterMode"));
