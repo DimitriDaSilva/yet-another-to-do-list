@@ -1,4 +1,5 @@
 import swal from "sweetalert";
+import { updateColorPair } from "./category-color.js";
 
 export function setListenerEdit(summaryEl, moreMenu) {
   createListener(summaryEl, moreMenu).then((res) => {
@@ -20,7 +21,10 @@ function createListener(summaryEl, moreMenu) {
       const details = summaryEl.parentElement;
       details.addEventListener("click", disableToggle, true);
 
-      moreMenu.remove();
+      const updatedMoreMenu = document.querySelector(
+        ".task-list-template__details__more-menu"
+      );
+      updatedMoreMenu.textContent = "";
 
       resolve({ pElement: pElement, details: details });
     });
@@ -59,6 +63,7 @@ function updateTaskEdit(newValue, detailsEl) {
   let classToBeReplaced = "";
 
   classToBeReplaced = detailsEl.classList.item(1);
+  updateColorPair(classToBeReplaced, newValue);
 
   liElements.forEach((task) => {
     task.classList.replace(classToBeReplaced, newValue);

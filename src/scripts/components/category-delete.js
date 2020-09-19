@@ -1,5 +1,10 @@
 import { categoryArray, urgencyArray } from "../index.js";
-import { changeColorStatus } from "./category-color.js";
+import {
+  changeColorStatus,
+  deleteColorPair,
+  colorPairs,
+} from "./category-color.js";
+import { filterMode } from "./filter.js";
 
 export function setListenerTrash(summaryEl) {
   const trashIcon = document.querySelector(
@@ -20,6 +25,7 @@ export function setListenerTrash(summaryEl) {
 
     // Pass the color used as not used
     changeColorStatus(summaryEl);
+    deleteColorPair(filterMode, classDetailsEl);
 
     // Delete the task group
     detailsEl.remove();

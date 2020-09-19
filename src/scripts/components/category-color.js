@@ -1,4 +1,5 @@
 import { rgbToHex, getParentElement } from "../utils.js";
+import { filterMode } from "./filter.js";
 
 const moreMenuTemplate = document.querySelector("#more-menu-template");
 
@@ -25,17 +26,31 @@ const presetColors = [
   { color: "#FEDD0B", used: false },
 ];
 let index = 0;
-export let colorPairs = {
-  category: {},
-  urgency: {},
-};
+export let colorPairs;
 
 export function setColorPairLoad(obj) {
-  colorPairs = obj;
+  if (obj == null) {
+    colorPairs = {
+      category: {},
+      urgency: {},
+    };
+  } else {
+    colorPairs = obj;
+  }
 }
 
 export function setColorPair(type, key, value) {
   colorPairs[type][key] = value;
+}
+
+export function updateColorPair(oldKey, newKey) {
+  const value = colorPairs[filterMode][oldKey];
+  deleteColorPair(filterMode, oldKey);
+  setColorPair(filterMode, newKey, value);
+}
+
+export function deleteColorPair(type, key) {
+  delete colorPairs[type][key];
 }
 
 colors.forEach((color) => {
@@ -132,12 +147,17 @@ export function colorListenerHandler(e) {
   if (hasClass) {
     const summaryEl = getParentElement(target, "SUMMARY");
     const pickedColor = target.style.background;
+    const rgbPickedColor = rgbToHex(pickedColor);
 
     changeColorStatus(summaryEl, pickedColor);
 
     formatColorCircle(pickedColor);
 
-    setColors(summaryEl, pickedColor);
+    setColors(summaryEl, rgbPickedColor);
+
+    const detailsEl = summaryEl.parentElement;
+    const className = detailsEl.classList.item(1);
+    setColorPair(filterMode, className, rgbPickedColor);
   }
 }
 
@@ -165,9 +185,9 @@ export function changeColorStatus(summaryEl = null, pickedColor = null) {
   });
 }
 
-export function setColors(summaryEl, pickedColor) {
+export function setColors(summaryEl, rgbPickedColor) {
   // Set the stroke with the new color
-  summaryEl.style.setProperty("border-bottom-color", pickedColor);
+  summaryEl.style.setProperty("border-bottom-color", rgbPickedColor);
 
   // Set the checkboxed with the new color
   const details = summaryEl.parentElement;
@@ -176,6 +196,6 @@ export function setColors(summaryEl, pickedColor) {
     ".task-template__item__custom-checkbox"
   );
   checkboxes.forEach((checkbox) => {
-    checkbox.style.setProperty("background", pickedColor);
+    checkbox.style.setProperty("background", rgbPickedColor);
   });
 }
