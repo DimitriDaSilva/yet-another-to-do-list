@@ -1,5 +1,8 @@
 import swal from "sweetalert";
+import { categoryArray, urgencyArray } from "../index.js";
 import { updateColorPair } from "./category-color.js";
+import { updateOptionDatalist } from "./dropdown-list.js";
+import { filterMode, filters } from "./filter.js";
 
 export function setListenerEdit(summaryEl, moreMenu) {
   createListener(summaryEl, moreMenu).then((res) => {
@@ -64,10 +67,19 @@ function updateTaskEdit(newValue, detailsEl) {
 
   classToBeReplaced = detailsEl.classList.item(1);
   updateColorPair(classToBeReplaced, newValue);
+  updateOptionDatalist(classToBeReplaced, newValue);
+
+  if (filterMode === filters[0]) {
+    updateCategoryArray(classToBeReplaced, newValue);
+  } else {
+    updateUrgencyArray(classToBeReplaced, newValue);
+  }
 
   liElements.forEach((task) => {
     task.classList.replace(classToBeReplaced, newValue);
   });
+
+  detailsEl.classList.replace(classToBeReplaced, newValue);
 }
 
 function isValidEdit(newValue) {
@@ -84,4 +96,14 @@ function isValidEdit(newValue) {
   } else {
     return true;
   }
+}
+
+function updateCategoryArray(oldCategory, newCategory) {
+  const index = categoryArray.indexOf(oldCategory);
+  categoryArray.splice(index, 1, newCategory);
+}
+
+function updateUrgencyArray(oldUrgency, newUrgency) {
+  const index = urgencyArray.indexOf(oldUrgency);
+  urgencyArray.splice(index, 1, newUrgency);
 }
