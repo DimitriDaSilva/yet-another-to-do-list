@@ -1,7 +1,7 @@
 const backgroundBtn = document.querySelector("#top-section__background");
 const backgroundPickerTemplate = document.querySelector("#background-image");
 
-export function setBackgroundBtn() {
+export function setBackgroundListener() {
   backgroundBtn.addEventListener("click", createBackgroundPicker);
 }
 

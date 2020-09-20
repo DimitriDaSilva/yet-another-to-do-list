@@ -25,7 +25,7 @@ const categoryInput = document.querySelector("#add-new-task__category__input");
 const urgencyInput = document.querySelector("#add-new-task__urgency__input");
 
 // Add a task after pressing the custom + button
-export function setNewTaskListeners() {
+export function setNewTaskListener() {
   addTaskBtn.addEventListener("click", checkValidInputClick);
 
   newTask.addEventListener("keyup", checkValidInputEnter);

@@ -14,6 +14,7 @@ export function setLoadListener() {
 }
 
 async function loadingPage() {
+  localStorage.clear();
   // Setting the dark mode previously set. Default light
   setDarkMode(localStorage.getItem("darkMode"));
   if (darkMode === null) {
@@ -55,9 +56,51 @@ async function loadingPage() {
     });
   }
 
-  // if (localStorage.length === 1 && data.length === 0) {
-  //   addTask("Crush my goals of the month", true);
-  //   addTask("Go find Voldemort's nose");
-  //   addTask("Date my best friend's little sister");
-  // }
+  if (localStorage.length === 0) {
+    addTask(
+      "Date my best friend's little sister",
+      "Personal",
+      "High",
+      "#e63946",
+      true
+    );
+
+    addTask(
+      "Buy Dobby a new hat for his birthday",
+      "Chores",
+      "High",
+      "#e63946",
+      false
+    );
+    addTask("Take Sirius to the vet", "Chores", "Medium", "#666CE1", false);
+    addTask(
+      "Kick Malefoy's ass in Defence Against the Dark Arts' class",
+      "School",
+      "Medium",
+      "#666CE1",
+      false
+    );
+    addTask(
+      "Ask Dumbledore and Hagrid for tips on how to grow a beard",
+      "Personal",
+      "Low",
+      "#a8dadc",
+      true
+    );
+    addTask(
+      "Take in the fact that I can't grow a beard",
+      "Personal",
+      "Low",
+      "#a8dadc",
+      false
+    );
+    addTask("Find Voldemort's nose", "Chores", "Low", "#a8dadc", false);
+    addTask(
+      "Make up a dream for Divination class",
+      "School",
+      "None",
+      "#ffb4a2",
+      false
+    );
+  }
 }

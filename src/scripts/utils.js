@@ -21,6 +21,7 @@ export function getParentElement(object, tag) {
   if (object.tagName === tag) {
     return object;
   }
+  // Stop the recursive calls if it gets to the body level
   if (object.tagName === "BODY") {
     return {};
   }
