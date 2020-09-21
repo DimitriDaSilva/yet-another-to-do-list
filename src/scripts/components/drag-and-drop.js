@@ -55,7 +55,9 @@ export function makeElementsDraggable() {
 
 // For touch-based devices
 tasksContainer.addEventListener("touchmove", (e) => {
+  e.preventDefault();
   const myLocation = e.targetTouches[0];
+  console.log(myLocation);
   const target = document.elementFromPoint(myLocation.pageX, myLocation.pageY);
   if (target !== null) {
     const targetUl = getParentElement(target, "UL");
