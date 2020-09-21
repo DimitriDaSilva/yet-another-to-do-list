@@ -6,7 +6,6 @@ import "../styles/04-footer.css";
 
 /* Import scripts */
 import { setNewTaskListener } from "./components/task-new.js";
-import { accessibility } from "./components/accessibility.js";
 import { setLoadListener } from "./components/load-page.js";
 import { setUnloadListener } from "./components/unload-page.js";
 import { setClearListener } from "./components/remove-complete.js";

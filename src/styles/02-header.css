@@ -26,7 +26,6 @@ header {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* background-position: center center; */
 }
 
 #top-section__date {
@@ -152,10 +151,6 @@ header {
     "urgency urgency urgency button";
   margin-bottom: 0.7rem;
   opacity: 0.95;
-}
-
-@media only screen and (min-width: 800px) {
-  /* width:  */
 }
 
 #add-new-task__input {

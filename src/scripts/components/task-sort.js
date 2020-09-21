@@ -1,9 +1,9 @@
 export function sortTasks(tasksArray) {
   // Create mock urgency array to sort
-  const MockUrgencyArray = ["High", "Medium", "Low", "None"];
+  const mockUrgencyArray = ["High", "Medium", "Low", "None"];
 
   return tasksArray.sort(
     (a, b) =>
-      MockUrgencyArray.indexOf(a.urgency) - MockUrgencyArray.indexOf(b.urgency)
+      mockUrgencyArray.indexOf(a.urgency) - mockUrgencyArray.indexOf(b.urgency)
   );
 }

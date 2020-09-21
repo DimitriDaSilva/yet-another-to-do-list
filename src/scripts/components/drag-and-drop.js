@@ -120,7 +120,7 @@ export function getDragAfterElement(container, y) {
   ).element;
 }
 
-// MOdify the category of the task upon drop and change its color
+// Modify the category of the task upon drop and change its color
 function updateTaskColor(task) {
   const detailsEl = getParentElement(task, "DETAILS");
 
