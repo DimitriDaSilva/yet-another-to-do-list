@@ -20,7 +20,6 @@ export function makeElementsDraggable() {
     task.addEventListener("touchstart", (e) => {
       touchTimeout = setTimeout(() => {
         task.draggable = true;
-        document.body.classList.add("stop-scroll");
         task.classList.add("task-template__item--dragging");
         dragLogo.classList.add("task-template__item--ongoing-drag");
       }, 200);
@@ -30,7 +29,6 @@ export function makeElementsDraggable() {
       clearTimeout(touchTimeout);
       updateTaskColor(task);
       task.draggable = false;
-      document.body.classList.remove("stop-scroll");
       task.classList.remove("task-template__item--dragging");
       dragLogo.classList.remove("task-template__item--ongoing-drag");
     });
