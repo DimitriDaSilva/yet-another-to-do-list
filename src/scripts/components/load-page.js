@@ -14,7 +14,6 @@ export function setLoadListener() {
 }
 
 async function loadingPage() {
-  localStorage.clear();
   // Setting the dark mode previously set. Default light
   setDarkMode(localStorage.getItem("darkMode"));
   if (darkMode === null) {

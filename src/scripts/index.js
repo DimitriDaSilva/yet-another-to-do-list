@@ -4,6 +4,9 @@ import "../styles/02-header.css";
 import "../styles/03-main.css";
 import "../styles/04-footer.css";
 
+/* Import favicon */
+require("../assets/logo.png");
+
 /* Import scripts */
 import { setNewTaskListener } from "./components/task-new.js";
 import { setLoadListener } from "./components/load-page.js";
