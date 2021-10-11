@@ -3,3 +3,4 @@ old/
 netlify.toml
 node_modules/
 dist/
+**/**/node_modules/
