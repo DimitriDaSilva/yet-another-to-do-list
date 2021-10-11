@@ -16,7 +16,7 @@ export function saveTasks() {
 
     // Get task text
     const text = liElements[i].querySelector("p");
-    const taskItem = text.outerText;
+    const taskItem = text.innerText;
 
     // Get category
     const category = liElements[i].classList.item(1);
