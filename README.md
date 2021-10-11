@@ -4,7 +4,7 @@
 
 https://yet-another-to-do-list.netlify.app/
 
-My very first project using JavaScript, I had fun doing it :fire: Hope you like it!
+One of my first projects using JavaScript, I had fun doing it :fire: Hope you like it!
 
 ![image](https://user-images.githubusercontent.com/66511903/136838968-5351fbad-bbd4-444c-94c3-565f7701b42b.png)
 
