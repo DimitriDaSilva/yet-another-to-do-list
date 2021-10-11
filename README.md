@@ -14,10 +14,10 @@ My very first project using JavaScript, I had fun doing it :fire: Hope you like 
 - webpack (module bundler)
 - Netlify (host)
 
-## Features implemented:
+## Features implemented
 - Drag-and-drop tasks to reorder them or to change their category. Works with both mouse and touch 
-- Background image randomly fetch from Unsplash. It can be chosen by using the search bar provided. The image picked is saved upon reload.
-- Colors and name of categories are customizable
+- Background image randomly fetched from Unsplash. It can also be chosen by using the search bar provided. The image picked is saved upon reload
+- Customizable categories (colors and name)
 - Dark mode (of course :new_moon_with_face:)
-- Filter can be set by category or by urgency
+- The filter can be set by category or by urgency
 - Tasks and general settings are saved in the browser
