@@ -6,7 +6,7 @@ https://yet-another-to-do-list.netlify.app/
 
 One of my first projects using JavaScript, I had fun doing it :fire: Hope you like it!
 
-![image](https://user-images.githubusercontent.com/66511903/136838968-5351fbad-bbd4-444c-94c3-565f7701b42b.png)
+![image](https://user-images.githubusercontent.com/66511903/136846298-38519121-4b2f-46be-b7b1-501d9e06a850.png)
 
 ## Tech stack
 - CSS/HTML
